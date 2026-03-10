@@ -6,6 +6,7 @@ public class Principal {
 		
 		System.out.println("soy iago");
 		System.out.println("soy Saul y tengo 18 años");
+		System.out.println("soy iago");
 	}
 
 }
