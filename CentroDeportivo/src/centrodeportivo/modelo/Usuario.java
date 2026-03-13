@@ -1,5 +1,8 @@
 package centrodeportivo.modelo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Usuario {
 	
 	private static int contador=0;
@@ -8,11 +11,16 @@ public class Usuario {
 	private String telefono;
 	private String contrasena;
 	
+	private CentroDeportivo centroDeportivo;
+	private List<Reserva> reservas;
+	
 	public Usuario (int idUsuario,String nombreCompleto,String telefono,String contrasena) {
 		this.idUsuario += contador;
 		this.nombreCompleto=nombreCompleto;
 		this.telefono=telefono;
 		this.contrasena=contrasena;
+		this.centroDeportivo = centroDeportivo;
+        this.reservas = new ArrayList<>();
 	}
 	
 	public int getIdUsuario() {
