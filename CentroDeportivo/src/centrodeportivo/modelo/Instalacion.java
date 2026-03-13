@@ -7,7 +7,7 @@ public class Instalacion {
 	private int idInstalacion;
 	private String nombre;
 	private int capacidadMaxima;
-	private TipoInstalacion tipo;
+	private TipoInstalacion tipo ;
 	private String horarioDisponibilidad;
 	private List < Reserva > reservas;
 	
