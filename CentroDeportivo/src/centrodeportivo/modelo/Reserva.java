@@ -1,20 +1,28 @@
 package centrodeportivo.modelo;
 
+import java.util.ArrayList;
+
 public abstract class Reserva {
 
+	
 	private static int contador=0;
 	private int idReserva;
 	private String fecha;
 	private String horaInicio;
 	private String duracion;
 	private Estado_Reserva estado;
+	public int idBuscado;
+	
+	private static ArrayList<Reserva> todasLasReservas = new ArrayList<>();
 	
 	public Reserva(int idReserva, String fecha, String horaInicio, String duracion, Estado_Reserva estado){
-		this.idReserva += contador;
+		this.idReserva = ++ contador;
 		this.fecha = fecha;
 		this.horaInicio = horaInicio;
 		this.duracion = duracion;
 		this.estado = estado;
+		
+		todasLasReservas.add(this);
 	}
 	
 	public int getIdReserva() {
@@ -48,4 +56,5 @@ public abstract class Reserva {
 
 	public abstract String consultarReglasUso();
 	
-}
+	                     
+	}
