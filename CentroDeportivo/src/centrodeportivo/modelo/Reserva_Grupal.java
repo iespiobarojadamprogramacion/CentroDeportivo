@@ -6,8 +6,8 @@ public class Reserva_Grupal extends Reserva {
 	private int numParticipantes;
 	private int numMaximoParticipantes = 6;
 	
-	public Reserva_Grupal(int idReserva, String fecha, String horaInicio, String duracion, Estado_Reserva estado, int numParticipantes) {
-		super(idReserva, fecha, horaInicio, duracion, estado);
+	public Reserva_Grupal( String fecha, String horaInicio, String duracion, Estado_Reserva estado, int numParticipantes) {
+		super(fecha, horaInicio, duracion, estado);
 		this.setNumParticipantes(numParticipantes);
 	}
 

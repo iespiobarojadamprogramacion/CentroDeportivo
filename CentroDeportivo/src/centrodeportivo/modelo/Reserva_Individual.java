@@ -2,8 +2,8 @@ package centrodeportivo.modelo;
 
 public class Reserva_Individual extends Reserva {
 
-	public Reserva_Individual(int idReserva, String fecha, String horaInicio, String duracion, Estado_Reserva estado) {
-		super(idReserva, fecha, horaInicio, duracion, estado);
+	public Reserva_Individual(String fecha, String horaInicio, String duracion, Estado_Reserva estado) {
+		super(fecha, horaInicio, duracion, estado);
 	}
 
 	private String reglasUso;

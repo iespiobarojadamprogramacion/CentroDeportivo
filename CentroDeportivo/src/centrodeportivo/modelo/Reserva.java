@@ -15,8 +15,8 @@ public abstract class Reserva {
 	
 	private static ArrayList<Reserva> todasLasReservas = new ArrayList<>();
 	
-	public Reserva(int idReserva, String fecha, String horaInicio, String duracion, Estado_Reserva estado){
-		this.idReserva = ++ contador;
+	public Reserva(String fecha, String horaInicio, String duracion, Estado_Reserva estado){
+		idReserva = ++contador;
 		this.fecha = fecha;
 		this.horaInicio = horaInicio;
 		this.duracion = duracion;

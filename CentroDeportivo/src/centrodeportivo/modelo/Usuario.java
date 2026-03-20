@@ -14,9 +14,8 @@ public class Usuario {
 	private CentroDeportivo centroDeportivo;
 	private List<Reserva> reservas;
 	
-	public Usuario (int idUsuario,String nombreCompleto,String telefono,String contrasena) {
-		contador++;
-		this.idUsuario = contador;
+	public Usuario (String nombreCompleto,String telefono,String contrasena) {
+		idUsuario = ++contador;
 		this.nombreCompleto=nombreCompleto;
 		this.telefono=telefono;
 		this.contrasena=contrasena;
@@ -45,31 +44,12 @@ public class Usuario {
 	public void setContrasena(String contrasena) {
 		this.contrasena = contrasena;
 	}
-	
-	public boolean crearReserva(Instalacion instalacion, String fecha, String horaInicio) {
-		
-		return true;
+
+	public String toString() {
+		return  "\nUsuario creado con éxito! \n"+
+                "ID: " + getIdUsuario()+"\n"+
+               "Nombre: " + getNombreCompleto()+"\n"
+                + "Teléfono: " + getTelefono()+"\n";
 	}
-	public boolean cancelarReserva(int idReserva) {
-		for (Reserva r : reservas) {
-            if (r.getIdReserva() == idReserva) {
-                reservas.remove(r);
-                return true;
-            }
-        }
-        return false;
-	}
-	public boolean modificarReserva(int idReserva, String fecha, String horaInicio) {
-	    for (Reserva r : reservas) {
-	        if (r.getIdReserva() == idReserva) {
-	            r.setFecha(fecha);
-	            r.setHoraInicio(horaInicio);
-	            return true;
-	        }
-	    }
-	    return false; // Añadir al diagrama de clases los metodos sets en Reserva
-	}
-	public Reserva[] consultarHistorialUso() {
-		return reservas.toArray(new Reserva[0]);
-	}
+
 }

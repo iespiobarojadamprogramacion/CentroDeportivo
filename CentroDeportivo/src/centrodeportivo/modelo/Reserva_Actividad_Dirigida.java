@@ -7,9 +7,9 @@ public class Reserva_Actividad_Dirigida extends Reserva {
 	public static String [] monitores = {"Juan","Ana","Carlos",
 			"Lucas", "Martin", "Alejandra", "Maria"};
 	
-	public Reserva_Actividad_Dirigida(int idReserva, String fecha, String horaInicio, String duracion,
+	public Reserva_Actividad_Dirigida(String fecha, String horaInicio, String duracion,
 		Estado_Reserva estado, String monitor, String nombreActividad) {
-		super(idReserva, fecha, horaInicio, duracion, estado);
+		super(fecha, horaInicio, duracion, estado);
 		int num = (int)(Math.random() * monitores.length);
 		this.monitor = monitores[num];
 		this.nombreActividad=nombreActividad;

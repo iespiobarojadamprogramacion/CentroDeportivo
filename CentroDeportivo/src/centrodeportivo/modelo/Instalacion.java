@@ -1,25 +1,24 @@
 package centrodeportivo.modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Instalacion {
-	
+	private static int contador = 0;
 	private int idInstalacion;
 	private String nombre;
 	private int capacidadMaxima;
-	private TipoInstalacion tipo ;
+	private TipoInstalacion tipo_i ;
 	private String horarioDisponibilidad;
 	private List < Reserva > reservas;
 	
-	public Instalacion (int idInstalacion, String nombre, int capacidadMaxima,TipoInstalacion tipo,String horarioDisponibilidad) {
-		
-		this.idInstalacion = idInstalacion ;
-		this.nombre = nombre ;
-		this.capacidadMaxima = capacidadMaxima ;
-		this.tipo = tipo ;
-		this.horarioDisponibilidad = horarioDisponibilidad ;
-		
-		
+	public Instalacion(String nombre, int capacidadMaxima, TipoInstalacion tipo_i, String horarioDisponibilidad) {
+	    idInstalacion = ++contador;
+	    this.nombre = nombre;
+	    this.capacidadMaxima = capacidadMaxima;
+	    this.tipo_i = tipo_i;
+	    this.horarioDisponibilidad = horarioDisponibilidad;
+	    this.reservas = new ArrayList<>();
 	}
 
 	public int getIdInstalacion() {
@@ -35,7 +34,7 @@ public class Instalacion {
 	}
 
 	public TipoInstalacion getTipo() {
-		return tipo;
+		return tipo_i;
 	}
 
 	public String getHorarioDisponibilidad() {
@@ -59,4 +58,13 @@ public class Instalacion {
 
 		return true; 
 	}
+
+	public void addReserva(Reserva r) {
+	    reservas.add(r);
+	}
+
+	public List<Reserva> getReservas() {
+	    return reservas;
+	}
+
 }
