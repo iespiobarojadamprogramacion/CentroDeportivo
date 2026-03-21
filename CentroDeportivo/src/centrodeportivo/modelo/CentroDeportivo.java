@@ -124,19 +124,6 @@ private static CentroDeportivo instancia;
 	    }
 	    return false; // no se encontró usuario con esos datos
 	}
-
-
-	public boolean eliminarUsuario(String nombre, String contrasena) {
-		for (int i = 0; i < usuarios.size(); i++) {
-			Usuario u = usuarios.get(i);
-			if (u.getNombreCompleto().equals(nombre) && u.getContrasena().equals(contrasena)) {
-				usuarios.remove(i);
-				return true;
-			}
-		}
-		return false;
-	}
-
 	// Gestión de las reservas
 
 	// Método principal para crear la reserva
@@ -290,13 +277,3 @@ private static CentroDeportivo instancia;
 		}
 		return libres.toArray(new String[0]);
 	}
-	
-
-	// Método para mostrar el menú
-
-	public Instalacion[] getInstalacionesOrdenadasPorId() {
-		Instalacion[] copia = Arrays.copyOf(instalaciones, instalaciones.length);
-		Arrays.sort(copia, Comparator.comparingInt(Instalacion::getIdInstalacion));
-		return copia;
-	}
-}
