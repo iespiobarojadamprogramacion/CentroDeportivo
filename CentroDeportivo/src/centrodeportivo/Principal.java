@@ -1,14 +1,7 @@
 package centrodeportivo;
-import java.util.Scanner;
-import centrodeportivo.modelo.CentroDeportivo;
-import centrodeportivo.modelo.Usuario;
-import centrodeportivo.modelo.Instalacion;
-import centrodeportivo.modelo.TipoInstalacion;
-import centrodeportivo.modelo.Estado_Reserva;
-import centrodeportivo.modelo.Tipo_Reserva;
 
 import java.util.Scanner;
-import centrodeportivo.modelo.*; // Importamos todo el modelo para conectar las clases
+import centrodeportivo.modelo.*;
 
 public class Principal {
 
@@ -16,15 +9,14 @@ public class Principal {
 
 		Scanner sc = new Scanner(System.in);
 
-		// Inicializamos el centro deportivo (el constructor ya crea las 6 instalaciones fijas)
-		
-		CentroDeportivo centro = new CentroDeportivo();
+		CentroDeportivo centro = CentroDeportivo.getInstancia();
 
-		// Está variable guarda al usuario que se registre para poder usarlo en las reservas
-		
+		// Esta variable guarda al usuario que se registre para poder usarlo en las
+		// reservas
+
 		Usuario usuarioActual = null;
 
-		System.out.println("=== Sistema de gestión deportiva (Gupo 3) ===");
+		System.out.println("=== Sistema de gestión deportiva (Grupo 3) ===");
 
 		int opcion = 0;
 
@@ -38,11 +30,20 @@ public class Principal {
 			System.out.println("6. Salir del programa");
 			System.out.print("Seleccione una opción: ");
 
-			opcion = sc.nextInt();
-			sc.nextLine(); 
+			// Validación básica para evitar que el programa se dañe si no ingresan un
+			// número
+
+			if (sc.hasNextInt()) {
+				opcion = sc.nextInt();
+				sc.nextLine();
+			} else {
+				System.out.println("Por favor, introduce un número válido.");
+				sc.nextLine();
+				continue;
+			}
 
 			switch (opcion) {
-			case 1: // Registro del usuario 
+			case 1: // Registro del usuario
 				System.out.println("\n-- Formulario de Registro --");
 				System.out.print("Nombre completo: ");
 				String nombre = sc.nextLine();
@@ -51,8 +52,8 @@ public class Principal {
 				System.out.print("Contraseña: ");
 				String pass = sc.nextLine();
 
-				// Creamos el objeto y lo registramos en la lista central del centro deportivo
-				
+				// Creamos el objeto y lo registramos
+
 				usuarioActual = new Usuario(nombre, tel, pass);
 				centro.registrarUsuario(usuarioActual);
 
@@ -60,7 +61,7 @@ public class Principal {
 				System.out.println(usuarioActual.toString());
 				break;
 
-			case 2: // Visualización de instalaciones 
+			case 2: // Visualización de instalaciones
 				System.out.println("\n-- Listado de instalaciones (ordenadas por id) --");
 				Instalacion[] lista = centro.getInstalacionesOrdenadasPorId();
 				for (int i = 0; i < lista.length; i++) {
@@ -68,19 +69,18 @@ public class Principal {
 				}
 				break;
 
-			case 3: // Verificamos que haya alguien "logueado" para poder asociar la reserva a un usuario
+			case 3: // Reserva individual
 				if (usuarioActual == null) {
 					System.out.println("Error: No hay un usuario activo. Debe registrarse en la Opción 1.");
 				} else {
 					System.out.println("\n-- Iniciando Reserva para: " + usuarioActual.getNombreCompleto() + " --");
 
-					// Obtenemos las instalaciones para elegir una por su índice
-	
 					Instalacion[] pistas = centro.getInstalacionesOrdenadasPorId();
 					System.out.println("Seleccione el número de la instalación deseada:");
 
-					for (int i = 0; i < pistas.length; i++)
+					for (int i = 0; i < pistas.length; i++) {
 						System.out.println(i + " -> " + pistas[i].getNombre());
+					}
 
 					int selec = sc.nextInt();
 					sc.nextLine();
@@ -91,56 +91,50 @@ public class Principal {
 						System.out.print("Introduzca horario (ej: 10:00 a 11:00): ");
 						String hora = sc.nextLine();
 
-						/* Vinculamos el objeto "usuarioActual" con la "pista" seleccionada. 
-						 * El método "crearReserva" del centro valida la disponibilidad antes de confirmar.
-						 */
-						
+						// Llamamos al método del centro que usa polimorfismo internamente
+
 						boolean exito = centro.crearReserva(usuarioActual, pistas[selec], fecha, hora, "1h",
 								Estado_Reserva.ACTIVA, null, null, 1, Tipo_Reserva.INDIVIDUAL);
 
 						if (exito) {
-							System.out.println(
-									"La reserva se ha guardado en el historial del usuario y de la instalación.");
+							System.out.println("¡Reserva confirmada y guardada en el historial!");
 						} else {
-							System.out.println(
-									"Fallo: Conflicto de disponibilidad. La pista ya está ocupada en ese horario.");
+							System.out.println("Fallo: La pista ya está ocupada o el horario no existe.");
 						}
 					}
 				}
 				break;
 
-			case 4: // Consulta el historial 
+			case 4: // Historial
 				if (usuarioActual == null) {
 					System.out.println("Primero registre un usuario.");
 				} else {
 					System.out.println("\n-- Historial de reservas de " + usuarioActual.getNombreCompleto() + " --");
 					Reserva[] h = usuarioActual.consultarHistorialUso();
-					if (h.length == 0)
+					if (h.length == 0) {
 						System.out.println("No se han encontrado reservas registradas.");
-					for (Reserva r : h) {
-						System.out.println("- Fecha: " + r.getFecha() + " | Hora: " + r.getHoraInicio() + " | Lugar: "
-								+ r.getInstalacion().getNombre());
+					} else {
+						for (Reserva r : h) {
+							System.out.println("- Fecha: " + r.getFecha() + " | Hora: " + r.getHoraInicio()
+									+ " | Lugar: " + r.getInstalacion().getNombre());
+							// Aquí se ve el polimorfismo en acción
+							System.out.println("  Reglas: " + r.consultarReglasUso());
+						}
 					}
 				}
 				break;
 
-			case 5: // Eliminar un usuario y resetea la sesión 
+			case 5: // Eliminar usuario
 				System.out.print("Nombre del usuario a eliminar: ");
 				String n = sc.nextLine();
 				System.out.print("Contraseña de seguridad: ");
 				String p = sc.nextLine();
 
 				if (centro.eliminarUsuario(n, p)) {
-					System.out.println("Usuario eliminado correctamente del registro central.");
-
-					/*
-					 * * Para resetear la sesión ponemos "usuarioActual" a null para invalidar la sesión
-					 * actual. Esto impide que se sigan haciendo reservas a nombre de un usuario borrado.
-					 */
-					
-					usuarioActual = null;
+					System.out.println("Usuario eliminado correctamente.");
+					usuarioActual = null; // Reseteamos la sesión
 				} else {
-					System.out.println("Error: Los datos no coinciden. No se pudo completar la operación.");
+					System.out.println("Error: Los datos no coinciden.");
 				}
 				break;
 
@@ -149,11 +143,10 @@ public class Principal {
 				break;
 
 			default:
-				System.out.println("Opción no válida. Intente de nuevo.");
+				System.out.println("Opción no válida.");
 			}
 		} while (opcion != 6);
 
 		sc.close();
 	}
 }
-
