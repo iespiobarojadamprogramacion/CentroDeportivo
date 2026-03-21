@@ -4,6 +4,8 @@ public class Reserva_Actividad_Dirigida extends Reserva {
 
 	private String nombreActividad;
 	private String monitor;
+
+	// El constructor recibe todo lo de reserva más monitor y nombre de la actividad
 	public static String [] monitores = {"Juan","Ana","Carlos",
 			"Lucas", "Martin", "Alejandra", "Maria"};
 	
@@ -15,35 +17,29 @@ public class Reserva_Actividad_Dirigida extends Reserva {
 		this.nombreActividad=nombreActividad;
 	
 	}
-	
-	private String reglasUso;
 
-	public void setReglasUso(String reglasUso) {
-		this.reglasUso = "Para entrar a la actividad del monitor "+monitor+", esperamos que siga las reglas especificadas por el/ella."+
-				"1. La impuntualidad es intolerable cualquier llegado fuera de tiempo perdera su oportunindad y no se le re embolsará la reserva"+
-				"2. Durante la actividad todo telefono o dispositivo electronico se pondra en una mochila propia y solo se cogeran llamadas importantes"+
-				"3. La autoridad de esta clase es del instructor/monitor y se hara lo que se pida, si no se quiere hacer o se opina excesivo puede salir y hablar con el centro"+
-				"Alguna regla particular del monitos sera notificada durante la sesion.";
-	}
+	public Reserva_Actividad_Dirigida(String fecha, String horaInicio, String duracion, Estado_Reserva estado,
+			Usuario usuario, Instalacion instalacion, String monitor, String nombreActividad) {
 
-	public String consultarReglasUso() {
-		return reglasUso;
+		super(fecha, horaInicio, duracion, estado, usuario, instalacion);
+		this.monitor = monitor;
+		this.nombreActividad = nombreActividad;
 	}
 
 	public String getNombreActividad() {
 		return nombreActividad;
 	}
 
-	public void setNombreActividad(String nombreActividad) {
-		this.nombreActividad = nombreActividad;
-	}
-
 	public String getMonitor() {
 		return String.valueOf(monitor);
 	}
-	
-	public String getReglasUso() {
-		return reglasUso;
+
+	// Implementamos el método abstracto con las reglas específicas para esta clase
+	public String consultarReglasUso() {
+		return "Reglas para '" + nombreActividad + "' con el monitor/a " + monitor + ":\n"
+				+ "1. La impuntualidad supone la pérdida de la plaza sin reembolso.\n"
+				+ "2. Teléfonos y dispositivos electrónicos deben guardarse durante la sesión.\n"
+				+ "3. Se debe seguir la autoridad del instructor en todo momento por seguridad.\n"
+				+ "Cualquier duda adicional, consulte con el monitor antes de empezar.";
 	}
-	
 }

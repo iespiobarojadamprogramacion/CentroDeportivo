@@ -7,6 +7,14 @@ import java.util.List;
 
 public class CentroDeportivo {
 
+private static CentroDeportivo instancia;
+
+	private String nombre;
+	private int capacidad;
+	private String horario;
+	private String direccion;
+
+	// Reflejo de las relaciones que se encuentran en el diagrama
     private static CentroDeportivo instancia;
 
     private String nombre;
@@ -43,8 +51,37 @@ public class CentroDeportivo {
         return instancia;
     }
 
-	public CentroDeportivo(String nombre, int capacidad, String horario, String direccion) {
+	private Instalacion[] instalaciones;
+	private ArrayList<Usuario> usuarios;
+	private ArrayList<Reserva> reservas;
 
+	// Constructor vacío (inicializa con datos por defecto)
+
+	public CentroDeportivo() {
+		this.nombre = "Polideportivo ESP";
+		this.capacidad = 200;
+		this.horario = "8:00-22:00";
+		this.direccion = "C/ La Mentirosa 420";
+		this.usuarios = new ArrayList<>();
+		this.reservas = new ArrayList<>();
+
+		// Inicializamos el array fijo de instalaciones
+
+		this.instalaciones = new Instalacion[] {
+				new Instalacion("Piscina Olimpica A-1", 100, TipoInstalacion.PISCINA_OLIMPICA,
+						"9:00 a 12:00,13:00 a 15:00"),
+				new Instalacion("Pista Tenis B-3", 100, TipoInstalacion.PISTA_TENIS, "10:00 a 12:30,14:00 a 16:00"),
+				new Instalacion("Pista Padel B-1", 100, TipoInstalacion.PISTA_PADEL, "9:30 a 11:30,13:30 a 15:30"),
+				new Instalacion("Pista Baloncesto B-2", 100, TipoInstalacion.PISTA_BALONCESTO,
+						"11:00 a 13:00,15:00 a 17:00"),
+				new Instalacion("Sala Polivalente C-1", 100, TipoInstalacion.SALA_POLIVALENTE,
+						"9:00 a 11:00,14:00 a 16:00"),
+				new Instalacion("Gimnasio C-2", 100, TipoInstalacion.GIMNASIO, "10:00 a 12:00,16:00 a 18:00") };
+	}
+
+	// Constructor con parámetros
+
+	public CentroDeportivo(String nombre, int capacidad, String horario, String direccion) {
 		this.nombre = nombre;
 		this.capacidad = capacidad;
 		this.horario = horario;
@@ -69,10 +106,10 @@ public class CentroDeportivo {
 		return direccion;
 	}
 
+	// Gestión de los usuarios
+
 	public void registrarUsuario(Usuario nuevoUsuario) {
-
 		if (nuevoUsuario != null) {
-
 			usuarios.add(nuevoUsuario);
 		}
 	}
@@ -89,144 +126,157 @@ public class CentroDeportivo {
 	}
 
 
-	public Reserva[] visualizarReservasPorInstalacion(int idInstalacion, String fecha) {
-
-		List<Reserva> encontradas = new ArrayList<>();
-
-		for (Reserva r : reservas) {
-
-			if (r.getFecha().equals(fecha)) {
-				encontradas.add(r);
+	public boolean eliminarUsuario(String nombre, String contrasena) {
+		for (int i = 0; i < usuarios.size(); i++) {
+			Usuario u = usuarios.get(i);
+			if (u.getNombreCompleto().equals(nombre) && u.getContrasena().equals(contrasena)) {
+				usuarios.remove(i);
+				return true;
 			}
 		}
-
-		return encontradas.toArray(new Reserva[0]);
+		return false;
 	}
 
-	public boolean registrarReserva(Usuario usuario, Instalacion instalacion, String fecha, String horaInicio) {
+	// Gestión de las reservas
 
-		if (usuario == null || instalacion == null) {
+	// Método principal para crear la reserva
+
+	public boolean crearReserva(Usuario usuario, Instalacion instalacion, String fecha, String horaInicio,
+			String duracion, Estado_Reserva estado, String monitor, String nombreActividad, int numParticipantes,
+			Tipo_Reserva tipo) {
+
+		// Valida que la instalación esté libre
+
+		if (!instalacion.verificarDisponibilidad(fecha, horaInicio)) {
 			return false;
 		}
 
-		if (instalacion.verificarDisponibilidad(fecha, horaInicio)) {
+		// Crea el objeto reserva correspondiente según el Enum
 
-			System.out.println("Reserva registrada para " + usuario.getNombreCompleto());
+		Reserva nuevaReserva = null;
 
+		switch (tipo) {
+		case INDIVIDUAL:
+			nuevaReserva = new Reserva_Individual(fecha, horaInicio, duracion, estado, usuario, instalacion);
+			break;
+		case GRUPAL:
+			nuevaReserva = new Reserva_Grupal(fecha, horaInicio, duracion, estado, usuario, instalacion,
+					numParticipantes);
+			break;
+		case ACTIVIDAD_DIRIGIDA:
+			nuevaReserva = new Reserva_Actividad_Dirigida(fecha, horaInicio, duracion, estado, usuario, instalacion,
+					monitor, nombreActividad);
+			break;
+		}
+
+		// Si se creó correctamente, la guardamos en los 3 sitios
+
+		if (nuevaReserva != null) {
+			this.reservas.add(nuevaReserva); // Lista del centro
+			instalacion.addReserva(nuevaReserva); // Lista de la instalación
+			usuario.addReserva(nuevaReserva); // Historial del usuario
 			return true;
-
 		}
 
 		return false;
+	}
 
+	public boolean cancelarReserva(int idReserva) {
+		for (Reserva r : reservas) {
+			if (r.getIdReserva() == idReserva) {
+				r.setEstado(Estado_Reserva.CANCELADA);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean modificarReserva(int idReserva, String fecha, String horaInicio, Instalacion nuevaInstalacion) {
+		for (Reserva r : reservas) {
+			if (r.getIdReserva() == idReserva) {
+
+				// Verificamos si la nueva instalación/horario está libre
+
+				if (nuevaInstalacion.verificarDisponibilidad(fecha, horaInicio)) {
+					r.setFecha(fecha);
+					r.setHoraInicio(horaInicio);
+
+					// Como la instalación es nueva, actualizamos la referencia en la reserva
+
+					r.setInstalacion(nuevaInstalacion);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	// Agenda y planificación
+
+	public Reserva[] visualizarReservasPorInstalacion(int idInstalacion, String fecha) {
+		List<Reserva> encontradas = new ArrayList<>();
+		for (Reserva r : reservas) {
+
+			// Comprobamos la fecha y que la instalación de esa reserva sea la que buscamos
+
+			if (r.getFecha().equals(fecha) && r.getInstalacion().getIdInstalacion() == idInstalacion) {
+				encontradas.add(r);
+			}
+		}
+		return encontradas.toArray(new Reserva[0]);
 	}
 
 	public String[] consultarOcupacionDiaria(String fecha) {
-	    int contador = 0;
+		int contador = 0;
+		for (Reserva r : reservas) {
+			if (r.getFecha().equals(fecha)
+					&& (r.getEstado() == Estado_Reserva.ACTIVA || r.getEstado() == Estado_Reserva.COMPLETADA)) {
+				contador++;
+			}
+		}
 
-	    for (Reserva r : reservas) {
-	        if (r.getFecha().equals(fecha) && r.getEstado() == Estado_Reserva.ACTIVA) {
-	            contador++;
-	        }
-	    }
-
-	    String info = "Informe del día " + fecha + ": Hay " + contador + " reservas confirmadas.";
-	    return new String[]{info};
+		String info = "Informe del día " + fecha + ": Hay " + contador + " reservas confirmadas.";
+		return new String[] { info };
 	}
 
-
 	public String[] consultarOcupacionSemanal(String[] fechasSemana) {
-	    String[] resultados = new String[fechasSemana.length];
-
-	    for (int i = 0; i < fechasSemana.length; i++) {
-	        int contador = 0;
-	        String fecha = fechasSemana[i];
-
-	        for (Reserva r : reservas) {
-	            if (r.getFecha().equals(fecha) && r.getEstado() == Estado_Reserva.ACTIVA) {
-	                contador++;
-	            }
-	        }
-
-	        resultados[i] = "Ocupación para " + fecha + ": " + contador + " reservas activas.";
-	    }
-
-	    return resultados;
+		String[] resultados = new String[fechasSemana.length];
+		for (int i = 0; i < fechasSemana.length; i++) {
+			int contador = 0;
+			String fecha = fechasSemana[i];
+			for (Reserva r : reservas) {
+				if (r.getFecha().equals(fecha)
+						&& (r.getEstado() == Estado_Reserva.ACTIVA || r.getEstado() == Estado_Reserva.COMPLETADA)) {
+					contador++;
+				}
+			}
+			resultados[i] = "Ocupación para " + fecha + ": " + contador + " reservas activas.";
+		}
+		return resultados;
 	}
 
 	public String[] identificarTramosLibres(Instalacion instalacion, String fecha) {
-	    List<String> libres = new ArrayList<>();
+		List<String> libres = new ArrayList<>();
+		String horario = instalacion.getHorarioDisponibilidad();
 
-	    String horario = instalacion.getHorarioDisponibilidad();
-	    if (horario == null || horario.isEmpty()) {
-	        return new String[]{"No hay horarios disponibles."};
-	    }
+		if (horario == null || horario.isEmpty()) {
+			return new String[] { "No hay horarios disponibles." };
+		}
 
-	    String[] tramos = horario.split(",");
+		String[] tramos = horario.split(",");
 
-	    for (String hora : tramos) {
-	        boolean ocupado = false;
-
-	        for (Reserva r : instalacion.getReservas()) {
-	            if (r.getFecha().equals(fecha) && r.getHoraInicio().equals(hora)
-	                    && r.getEstado() == Estado_Reserva.ACTIVA) {
-	                ocupado = true;
-	                break;
-	            }
-	        }
-
-	        if (!ocupado) {
-	            libres.add(hora);
-	        }
-	    }
-
-	    if (libres.isEmpty()) {
-	        return new String[]{"No hay tramos libres el " + fecha};
-	    }
-
-	    return libres.toArray(new String[0]);
-	}
-
-
-	public boolean crearReserva(Instalacion instalacion, String fecha, String horaInicio, String duracion, Estado_Reserva estado, 
-	 String monitor, String nombreActividad, int numParticipantes, Tipo_Reserva tipo) {
-
-		 if (!instalacion.verificarDisponibilidad(fecha, horaInicio)) {
-		     return false;
-		  }
-
-		 for (Reserva r : reservas) {
-		     if (r.getFecha().equals(fecha) && r.getHoraInicio().equals(horaInicio)) {
-		    	 if (r.getEstado() == Estado_Reserva.ACTIVA) {
-		             return false;
-		            }
-		        }
-		    }
-
-		Reserva nueva = null;
-
-		switch(tipo) {
-
-		   case INDIVIDUAL:
-		       nueva = new Reserva_Individual(fecha, horaInicio, duracion, estado);
-		       break;
-
-		   case GRUPAL:
-		       nueva = new Reserva_Grupal(fecha, horaInicio, duracion, estado, numParticipantes);
-		       break;
-
-		   case ACTIVIDAD_DIRIGIDA:
-		        nueva = new Reserva_Actividad_Dirigida(fecha, horaInicio, duracion, estado, monitor, nombreActividad);
-		        break;
-		    }
-
-		    if (nueva == null) {
-		        return false;
-		        }
-
-		 reservas.add(nueva);
-		 instalacion.addReserva(nueva);
-		 return true;
+		for (String hora : tramos) {
+			boolean ocupado = false;
+			for (Reserva r : instalacion.getReservas()) {
+				if (r.getFecha().equals(fecha) && r.getHoraInicio().equals(hora)
+						&& r.getEstado() == Estado_Reserva.ACTIVA) {
+					ocupado = true;
+					break;
+				}
+			}
+			if (!ocupado) {
+				libres.add(hora);
+			}
 		}
 	
 	public Instalacion[] getInstalacionesOrdenadasPorId() {
@@ -235,29 +285,18 @@ public class CentroDeportivo {
 	    return copia;
 	}
 
-
-	public boolean cancelarReserva(int idReserva) {
-		for (Reserva r : reservas) {
-            if (r.getIdReserva() == idReserva) {
-                reservas.remove(r);
-                return true;
-            }
-        }
-        return false;
-	}
-	public boolean modificarReserva(int idReserva, String fecha, String horaInicio) {
-	    for (Reserva r : reservas) {
-	        if (r.getIdReserva() == idReserva) {
-	            r.setFecha(fecha);
-	            r.setHoraInicio(horaInicio);
-	            return true;
-	        }
-	    }
-	    return false; 
-	}
-	public Reserva[] consultarHistorialUso() {
-		return reservas.toArray(new Reserva[0]);
+		if (libres.isEmpty()) {
+			return new String[] { "No hay tramos libres el " + fecha };
+		}
+		return libres.toArray(new String[0]);
 	}
 	
 
+	// Método para mostrar el menú
+
+	public Instalacion[] getInstalacionesOrdenadasPorId() {
+		Instalacion[] copia = Arrays.copyOf(instalaciones, instalaciones.length);
+		Arrays.sort(copia, Comparator.comparingInt(Instalacion::getIdInstalacion));
+		return copia;
+	}
 }

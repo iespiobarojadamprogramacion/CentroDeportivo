@@ -1,24 +1,28 @@
 package centrodeportivo.modelo;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Instalacion {
+
 	private static int contador = 0;
 	private int idInstalacion;
 	private String nombre;
+	private TipoInstalacion tipo;
 	private int capacidadMaxima;
-	private TipoInstalacion tipo_i ;
 	private String horarioDisponibilidad;
-	private List < Reserva > reservas;
-	
-	public Instalacion(String nombre, int capacidadMaxima, TipoInstalacion tipo_i, String horarioDisponibilidad) {
-	    idInstalacion = ++contador;
-	    this.nombre = nombre;
-	    this.capacidadMaxima = capacidadMaxima;
-	    this.tipo_i = tipo_i;
-	    this.horarioDisponibilidad = horarioDisponibilidad;
-	    this.reservas = new ArrayList<>();
+	private ArrayList<Reserva> reservas;
+
+	public Instalacion(String nombre, int capacidadMaxima, TipoInstalacion tipo, String horarioDisponibilidad) {
+
+		this.idInstalacion = ++contador;
+		this.nombre = nombre;
+		this.capacidadMaxima = capacidadMaxima;
+		this.tipo = tipo;
+		this.horarioDisponibilidad = horarioDisponibilidad;
+
+		// Inicializamos la lista vacía
+
+		this.reservas = new ArrayList<>();
 	}
 
 	public int getIdInstalacion() {
@@ -29,42 +33,53 @@ public class Instalacion {
 		return nombre;
 	}
 
-	public int getCapacidadMaxima() {
-		return capacidadMaxima;
-	}
-
 	public TipoInstalacion getTipo() {
 		return tipo_i;
+	}
+
+	public int getCapacidadMaxima() {
+		return capacidadMaxima;
 	}
 
 	public String getHorarioDisponibilidad() {
 		return horarioDisponibilidad;
 	}
-	
+
+	// Este método es necesario para que el centro deportivo lea las reservas
+
+	public ArrayList<Reserva> getReservas() {
+		return reservas;
+	}
+
 	public boolean verificarDisponibilidad(String fecha, String hora) {
-		
+
+		// Primero miramos si esa hora existe en el horario de la instalación
+
 		if (this.horarioDisponibilidad == null || !this.horarioDisponibilidad.contains(hora)) {
 			return false;
 		}
 
+		// Si la hora es válida, miramos si ya hay alguien que haya reservado y esté "ACTIVA"
+
 		for (Reserva r : reservas) {
+
 			if (r.getFecha().equals(fecha) && r.getHoraInicio().equals(hora)) {
-				
+
 				if (r.getEstado() == Estado_Reserva.ACTIVA) {
-					return false;
+
+					return false; // Está ocupada
 				}
 			}
 		}
 
-		return true; 
+		return true; // Si pasa todos los filtros, está libre
 	}
 
-	public void addReserva(Reserva r) {
-	    reservas.add(r);
-	}
+	// Método para que el centro deportivo vincule la reserva a esta instalación
 
-	public List<Reserva> getReservas() {
-	    return reservas;
+	public void addReserva(Reserva reserva) {
+		if (reserva != null) {
+			this.reservas.add(reserva);
+		}
 	}
-
 }
