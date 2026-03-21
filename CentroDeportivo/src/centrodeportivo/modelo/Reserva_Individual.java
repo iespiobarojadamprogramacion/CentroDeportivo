@@ -8,7 +8,7 @@ public class Reserva_Individual extends Reserva {
 		super(fecha, horaInicio, duracion, estado, usuario, instalacion);
 	}
 
-	// Implementamos el método abstracto
+	@Override
 	public String consultarReglasUso() {
 
 		return "Reglas para Reserva Individual:\n"

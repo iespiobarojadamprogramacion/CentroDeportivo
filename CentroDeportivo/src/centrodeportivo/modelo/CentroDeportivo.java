@@ -7,7 +7,7 @@ import java.util.List;
 
 public class CentroDeportivo {
 
-private static CentroDeportivo instancia;
+	private static CentroDeportivo instancia;
 
 	private String nombre;
 	private int capacidad;
@@ -15,41 +15,6 @@ private static CentroDeportivo instancia;
 	private String direccion;
 
 	// Reflejo de las relaciones que se encuentran en el diagrama
-    private static CentroDeportivo instancia;
-
-    private String nombre;
-    private int capacidad;
-    private String horario;
-    private String direccion;
-
-    private List<Usuario> usuarios;
-    private List<Reserva> reservas;
-    private Instalacion[] intalaciones;
-
-    public CentroDeportivo() {
-        this.nombre = "Polideportivo ESP";
-        this.capacidad = 200;
-        this.horario = "8:00-22:00";
-        this.direccion = "C/ La Mentirosa 420";
-        this.usuarios = new ArrayList<>();
-        this.reservas = new ArrayList<>();
-        this.intalaciones = new Instalacion[]{
-        		new Instalacion("Piscina Olimpica A-1", 100, TipoInstalacion.PISCINA_OLIMPICA, "9:00 a 12:00,13:00 a 15:00"),
-        		new Instalacion("Pista Tenis B-3", 100, TipoInstalacion.PISTA_TENIS, "10:00 a 12:30,14:00 a 16:00"),
-        		new Instalacion("Pista Padel B-1", 100, TipoInstalacion.PISTA_PADEL, "9:30 a 11:30,13:30 a 15:30"),
-        		new Instalacion("Pista Baloncesto B-2", 100, TipoInstalacion.PISTA_BALONCESTO, "11:00 a 13:00,15:00 a 17:00"),
-        		new Instalacion("Sala Polivalente C-1", 100, TipoInstalacion.SALA_POLIVALENTE, "9:00 a 11:00,14:00 a 16:00"),
-        		new Instalacion("Gimnasio C-2", 100, TipoInstalacion.GIMNASIO, "10:00 a 12:00,16:00 a 18:00"),
-
-        };
-    }
-
-    public static CentroDeportivo getInstancia() {
-        if (instancia == null) {
-            instancia = new CentroDeportivo();
-        }
-        return instancia;
-    }
 
 	private Instalacion[] instalaciones;
 	private ArrayList<Usuario> usuarios;
@@ -58,6 +23,7 @@ private static CentroDeportivo instancia;
 	// Constructor vacío (inicializa con datos por defecto)
 
 	public CentroDeportivo() {
+
 		this.nombre = "Polideportivo ESP";
 		this.capacidad = 200;
 		this.horario = "8:00-22:00";
@@ -82,14 +48,35 @@ private static CentroDeportivo instancia;
 	// Constructor con parámetros
 
 	public CentroDeportivo(String nombre, int capacidad, String horario, String direccion) {
+
 		this.nombre = nombre;
 		this.capacidad = capacidad;
 		this.horario = horario;
 		this.direccion = direccion;
 		this.usuarios = new ArrayList<>();
 		this.reservas = new ArrayList<>();
+
+		this.instalaciones = new Instalacion[] {
+
+				new Instalacion("Piscina Olimpica A-1", 100, TipoInstalacion.PISCINA_OLIMPICA,
+						"9:00 a 12:00,13:00 a 15:00"),
+				new Instalacion("Pista Tenis B-3", 100, TipoInstalacion.PISTA_TENIS, "10:00 a 12:30,14:00 a 16:00"),
+				new Instalacion("Pista Padel B-1", 100, TipoInstalacion.PISTA_PADEL, "9:30 a 11:30,13:30 a 15:30"),
+				new Instalacion("Pista Baloncesto B-2", 100, TipoInstalacion.PISTA_BALONCESTO,
+						"11:00 a 13:00,15:00 a 17:00"),
+				new Instalacion("Sala Polivalente C-1", 100, TipoInstalacion.SALA_POLIVALENTE,
+						"9:00 a 11:00,14:00 a 16:00"),
+				new Instalacion("Gimnasio C-2", 100, TipoInstalacion.GIMNASIO, "10:00 a 12:00,16:00 a 18:00") };
 	}
-	
+
+	public static CentroDeportivo getInstancia() {
+
+		if (instancia == null) {
+			instancia = new CentroDeportivo();
+		}
+		return instancia;
+	}
+
 	public String getNombre() {
 		return nombre;
 	}
@@ -113,17 +100,18 @@ private static CentroDeportivo instancia;
 			usuarios.add(nuevoUsuario);
 		}
 	}
-	
+
 	public boolean eliminarUsuario(String nombre, String contrasena) {
-	    for (int i = 0; i < usuarios.size(); i++) {
-	        Usuario u = usuarios.get(i);
-	        if (u.getNombreCompleto().equals(nombre) && u.getContrasena().equals(contrasena)) {
-	            usuarios.remove(i);
-	            return true; // eliminado con éxito
-	        }
-	    }
-	    return false; // no se encontró usuario con esos datos
+		for (int i = 0; i < usuarios.size(); i++) {
+			Usuario u = usuarios.get(i);
+			if (u.getNombreCompleto().equals(nombre) && u.getContrasena().equals(contrasena)) {
+				usuarios.remove(i);
+				return true; // Eliminado con éxito
+			}
+		}
+		return false; // No se encontró usuario con esos datos
 	}
+
 	// Gestión de las reservas
 
 	// Método principal para crear la reserva
@@ -265,15 +253,16 @@ private static CentroDeportivo instancia;
 				libres.add(hora);
 			}
 		}
-	
-	public Instalacion[] getInstalacionesOrdenadasPorId() {
-	    Instalacion[] copia = Arrays.copyOf(intalaciones, intalaciones.length); // copia del array
-	    Arrays.sort(copia, Comparator.comparingInt(Instalacion::getIdInstalacion));
-	    return copia;
-	}
 
 		if (libres.isEmpty()) {
 			return new String[] { "No hay tramos libres el " + fecha };
 		}
 		return libres.toArray(new String[0]);
 	}
+
+	public Instalacion[] getInstalacionesOrdenadasPorId() {
+		Instalacion[] copia = Arrays.copyOf(instalaciones, instalaciones.length); // copia del array corregida
+		Arrays.sort(copia, Comparator.comparingInt(Instalacion::getIdInstalacion));
+		return copia;
+	}
+}
