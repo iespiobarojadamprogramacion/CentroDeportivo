@@ -4,38 +4,33 @@ public class Reserva_Actividad_Dirigida extends Reserva {
 
 	private String nombreActividad;
 	private String monitor;
-	
-	public Reserva_Actividad_Dirigida(int idReserva, String fecha, String horaInicio, String duracion,
-			Estado_Reserva estado, String monitor, String nombreActividad) {
-		super(idReserva, fecha, horaInicio, duracion, estado);
-		this.monitor=monitor;
-		this.nombreActividad=nombreActividad;
-	}
-	
-	private String reglasUso;
 
-	public void setReglasUso(String reglasUso) {
-		this.reglasUso = reglasUso;
-	}
+	// El constructor recibe todo lo de reserva más monitor y nombre de la actividad
 
-	public String consultarReglasUso() {
-		return reglasUso;
+	public Reserva_Actividad_Dirigida(String fecha, String horaInicio, String duracion, Estado_Reserva estado,
+			Usuario usuario, Instalacion instalacion, String monitor, String nombreActividad) {
+
+		super(fecha, horaInicio, duracion, estado, usuario, instalacion);
+		this.monitor = monitor;
+		this.nombreActividad = nombreActividad;
 	}
 
 	public String getNombreActividad() {
 		return nombreActividad;
 	}
 
-	public void setNombreActividad(String nombreActividad) {
-		this.nombreActividad = nombreActividad;
-	}
-
 	public String getMonitor() {
 		return monitor;
 	}
 
-	public void setMonitor(String monitor) {
-		this.monitor = monitor;
+	// Implementamos el método abstracto con las reglas específicas para esta clase
+
+	@Override
+	public String consultarReglasUso() {
+		return "Reglas para '" + nombreActividad + "' con el monitor/a " + monitor + ":\n"
+				+ "1. La impuntualidad supone la pérdida de la plaza sin reembolso.\n"
+				+ "2. Teléfonos y dispositivos electrónicos deben guardarse durante la sesión.\n"
+				+ "3. Se debe seguir la autoridad del instructor en todo momento por seguridad.\n"
+				+ "Cualquier duda adicional, consulte con el monitor antes de empezar.";
 	}
-	
 }

@@ -2,40 +2,39 @@ package centrodeportivo.modelo;
 
 public class Reserva_Grupal extends Reserva {
 
-	private int numMinimoParticipantes;
-	private int numMaximoParticipantes;
-	
-	public Reserva_Grupal(int idReserva, String fecha, String horaInicio, String duracion, Estado_Reserva estado, int numMinimoParticipantes, int numMaximoParticipantes) {
-		super(idReserva, fecha, horaInicio, duracion, estado);
-		this.numMinimoParticipantes=numMinimoParticipantes;
-		this.numMaximoParticipantes=numMaximoParticipantes;
+	private int numParticipantes;
+	private int numMinimoParticipantes = 2;
+	private int numMaximoParticipantes = 6;
+
+	// El constructor recibe todo lo de reserva más los participantes
+
+	public Reserva_Grupal(String fecha, String horaInicio, String duracion, Estado_Reserva estado, Usuario usuario,
+			Instalacion instalacion, int numParticipantes) {
+
+		super(fecha, horaInicio, duracion, estado, usuario, instalacion);
+		this.numParticipantes = numParticipantes;
+	}
+
+	public int getNumParticipantes() {
+		return numParticipantes;
 	}
 
 	public int getNumMinimoParticipantes() {
 		return numMinimoParticipantes;
 	}
 
-	public void setNumMinimoParticipantes(int numMinimoParticipantes) {
-		this.numMinimoParticipantes = numMinimoParticipantes;
-	}
-
 	public int getNumMaximoParticipantes() {
 		return numMaximoParticipantes;
 	}
 
-	public void setNumMaximoParticipantes(int numMaximoParticipantes) {
-		this.numMaximoParticipantes = numMaximoParticipantes;
-	}
+	// Implementamos el método abstracto con las reglas específicas
 
-	private String reglasUso;
-
-	public void setReglasUso(String reglasUso) {
-		this.reglasUso = reglasUso;
-	}
-
+	@Override
 	public String consultarReglasUso() {
-		return reglasUso;
+		return "Reglas para Reserva Grupal (" + numParticipantes + " participantes):\n"
+				+ "1. La impuntualidad no es reembolsable (tarde a partir de 15 min).\n"
+				+ "2. El reservante principal es responsable de los menores y de cualquier daño.\n"
+				+ "3. Si el responsable sale del centro, sus acompañantes también deben salir.\n"
+				+ "Cualquier duda, contacte por teléfono o en recepción.";
 	}
-	
-	
 }
