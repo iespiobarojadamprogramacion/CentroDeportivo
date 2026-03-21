@@ -9,8 +9,6 @@ public class Reserva_Individual extends Reserva {
 	}
 
 	// Implementamos el método abstracto
-
-	@Override
 	public String consultarReglasUso() {
 
 		return "Reglas para Reserva Individual:\n"

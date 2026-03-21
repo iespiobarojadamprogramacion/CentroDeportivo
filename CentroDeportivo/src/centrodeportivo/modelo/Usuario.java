@@ -69,10 +69,12 @@ public class Usuario {
 	public Reserva[] consultarHistorialUso() {
 		return this.reservas.toArray(new Reserva[0]);
 	}
-
-	@Override
+  
 	public String toString() {
-		return "\n¡Usuario creado con éxito! \n" + "ID: " + getIdUsuario() + "\n" + "Nombre: " + getNombreCompleto()
-				+ "\n" + "Teléfono: " + getTelefono() + "\n";
+		return  "\nUsuario creado con éxito! \n"+
+                "ID: " + getIdUsuario()+"\n"+
+               "Nombre: " + getNombreCompleto()+"\n"
+                + "Teléfono: " + getTelefono()+"\n";
 	}
 }
+

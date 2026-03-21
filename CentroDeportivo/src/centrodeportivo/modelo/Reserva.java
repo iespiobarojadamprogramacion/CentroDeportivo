@@ -1,5 +1,7 @@
 package centrodeportivo.modelo;
 
+import java.util.ArrayList;
+
 public abstract class Reserva {
 
 	private static int contador = 0;

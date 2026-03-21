@@ -34,7 +34,7 @@ public class Instalacion {
 	}
 
 	public TipoInstalacion getTipo() {
-		return tipo;
+		return tipo_i;
 	}
 
 	public int getCapacidadMaxima() {

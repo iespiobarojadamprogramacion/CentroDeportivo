@@ -26,15 +26,20 @@ public class Reserva_Grupal extends Reserva {
 	public int getNumMaximoParticipantes() {
 		return numMaximoParticipantes;
 	}
-
+  
+	public void setNumParticipantes(int numParticipantes) {
+		this.numParticipantes = numParticipantes;
+	}
+	
 	// Implementamos el método abstracto con las reglas específicas
+	private String reglasUso;
 
-	@Override
 	public String consultarReglasUso() {
 		return "Reglas para Reserva Grupal (" + numParticipantes + " participantes):\n"
 				+ "1. La impuntualidad no es reembolsable (tarde a partir de 15 min).\n"
 				+ "2. El reservante principal es responsable de los menores y de cualquier daño.\n"
 				+ "3. Si el responsable sale del centro, sus acompañantes también deben salir.\n"
 				+ "Cualquier duda, contacte por teléfono o en recepción.";
-	}
+ 	}
+ }
 }

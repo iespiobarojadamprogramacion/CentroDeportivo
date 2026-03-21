@@ -1,4 +1,11 @@
 package centrodeportivo;
+import java.util.Scanner;
+import centrodeportivo.modelo.CentroDeportivo;
+import centrodeportivo.modelo.Usuario;
+import centrodeportivo.modelo.Instalacion;
+import centrodeportivo.modelo.TipoInstalacion;
+import centrodeportivo.modelo.Estado_Reserva;
+import centrodeportivo.modelo.Tipo_Reserva;
 
 import java.util.Scanner;
 import centrodeportivo.modelo.*; // Importamos todo el modelo para conectar las clases
@@ -149,3 +156,4 @@ public class Principal {
 		sc.close();
 	}
 }
+
