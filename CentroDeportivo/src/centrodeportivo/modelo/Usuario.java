@@ -1,75 +1,80 @@
 package centrodeportivo.modelo;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Usuario {
-	
-	private static int contador=0;
+
+	// Variable estática para autoincrementar el id automáticamente
+
+	private static int contador = 0;
 	private int idUsuario;
 	private String nombreCompleto;
 	private String telefono;
 	private String contrasena;
-	
-	private CentroDeportivo centroDeportivo;
-	private List<Reserva> reservas;
-	
-	public Usuario (int idUsuario,String nombreCompleto,String telefono,String contrasena) {
-		contador++;
-		this.idUsuario = contador;
-		this.nombreCompleto=nombreCompleto;
-		this.telefono=telefono;
-		this.contrasena=contrasena;
-		this.centroDeportivo = centroDeportivo;
-        this.reservas = new ArrayList<>();
+
+	// Aquí aplicamos la relación que tiene un usuario
+
+	private ArrayList<Reserva> reservas;
+
+	public Usuario(String nombreCompleto, String telefono, String contrasena) {
+
+		this.idUsuario = ++contador;
+		this.nombreCompleto = nombreCompleto;
+		this.telefono = telefono;
+		this.contrasena = contrasena;
+
+		// Inicializamos la lista de reservas vacía para que no dé error al añadir
+
+		this.reservas = new ArrayList<>();
 	}
-	
+
 	public int getIdUsuario() {
 		return idUsuario;
 	}
+
 	public String getNombreCompleto() {
 		return nombreCompleto;
 	}
+
 	public void setNombreCompleto(String nombreCompleto) {
 		this.nombreCompleto = nombreCompleto;
 	}
+
 	public String getTelefono() {
 		return telefono;
 	}
+
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
+
 	public String getContrasena() {
 		return contrasena;
 	}
+
 	public void setContrasena(String contrasena) {
 		this.contrasena = contrasena;
 	}
-	
-	public boolean crearReserva(Instalacion instalacion, String fecha, String horaInicio) {
-		
-		return true;
+
+	// Método para que el centro deportivo le asigne una reserva a este usuario
+
+	public void addReserva(Reserva r) {
+		if (r != null) {
+			this.reservas.add(r);
+		}
 	}
-	public boolean cancelarReserva(int idReserva) {
-		for (Reserva r : reservas) {
-            if (r.getIdReserva() == idReserva) {
-                reservas.remove(r);
-                return true;
-            }
-        }
-        return false;
-	}
-	public boolean modificarReserva(int idReserva, String fecha, String horaInicio) {
-	    for (Reserva r : reservas) {
-	        if (r.getIdReserva() == idReserva) {
-	            r.setFecha(fecha);
-	            r.setHoraInicio(horaInicio);
-	            return true;
-	        }
-	    }
-	    return false; // Añadir al diagrama de clases los metodos sets en Reserva
-	}
+
+	// Método para ver el historial
+
 	public Reserva[] consultarHistorialUso() {
-		return reservas.toArray(new Reserva[0]);
+		return this.reservas.toArray(new Reserva[0]);
+	}
+  
+	public String toString() {
+		return  "\nUsuario creado con éxito! \n"+
+                "ID: " + getIdUsuario()+"\n"+
+               "Nombre: " + getNombreCompleto()+"\n"
+                + "Teléfono: " + getTelefono()+"\n";
 	}
 }
+
