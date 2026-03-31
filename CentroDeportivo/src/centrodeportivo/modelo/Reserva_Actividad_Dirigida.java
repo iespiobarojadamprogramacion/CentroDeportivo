@@ -8,6 +8,15 @@ public class Reserva_Actividad_Dirigida extends Reserva {
 	// Lista de monitores
 
 	public static String[] monitores = { "Juan", "Ana", "Carlos", "Lucas", "Martin", "Alejandra", "Maria" };
+	
+
+	public String getNombreActividad() {
+		return nombreActividad;
+	}
+
+	public String getMonitor() {
+		return monitor;
+	}
 
 	// Constructor que pasa usuario e instalacion al padre
 
@@ -21,27 +30,8 @@ public class Reserva_Actividad_Dirigida extends Reserva {
 		this.nombreActividad = nombreActividad;
 	}
 
-	// Constructor que asigna un monitor específico
-
-	public Reserva_Actividad_Dirigida(String fecha, String horaInicio, String duracion, Estado_Reserva estado,
-			Usuario usuario, Instalacion instalacion, String monitor, String nombreActividad) {
-
-		super(fecha, horaInicio, duracion, estado, usuario, instalacion);
-		this.monitor = monitor;
-		this.nombreActividad = nombreActividad;
-	}
-
-	public String getNombreActividad() {
-		return nombreActividad;
-	}
-
-	public String getMonitor() {
-		return monitor;
-	}
-
 	// Implementamos el método abstracto
 
-	@Override
 	public String consultarReglasUso() {
 		return "Reglas para '" + nombreActividad + "' con el monitor/a " + monitor + ":\n"
 				+ "1. La impuntualidad supone la pérdida de la plaza sin reembolso.\n"
