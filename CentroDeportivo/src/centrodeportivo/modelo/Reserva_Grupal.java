@@ -33,9 +33,6 @@ public class Reserva_Grupal extends Reserva {
 
 	// Implementamos el método abstracto con las reglas específicas
 
-	private String reglasUso;
-
-	@Override
 	public String consultarReglasUso() {
 		return "Reglas para Reserva Grupal (" + numParticipantes + " participantes):\n"
 				+ "1. La impuntualidad no es reembolsable (tarde a partir de 15 min).\n"

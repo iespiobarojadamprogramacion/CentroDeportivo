@@ -34,15 +34,12 @@ public class CentroDeportivo {
 		// Inicializamos el array fijo de instalaciones
 
 		this.instalaciones = new Instalacion[] {
-				new Instalacion("Piscina Olimpica A-1", 100, TipoInstalacion.PISCINA_OLIMPICA,
-						"9:00 a 12:00,13:00 a 15:00"),
-				new Instalacion("Pista Tenis B-3", 100, TipoInstalacion.PISTA_TENIS, "10:00 a 12:30,14:00 a 16:00"),
-				new Instalacion("Pista Padel B-1", 100, TipoInstalacion.PISTA_PADEL, "9:30 a 11:30,13:30 a 15:30"),
-				new Instalacion("Pista Baloncesto B-2", 100, TipoInstalacion.PISTA_BALONCESTO,
-						"11:00 a 13:00,15:00 a 17:00"),
-				new Instalacion("Sala Polivalente C-1", 100, TipoInstalacion.SALA_POLIVALENTE,
-						"9:00 a 11:00,14:00 a 16:00"),
-				new Instalacion("Gimnasio C-2", 100, TipoInstalacion.GIMNASIO, "10:00 a 12:00,16:00 a 18:00") };
+				new Instalacion("Piscina Olimpica A-1", 100, TipoInstalacion.PISCINA_OLIMPICA, "10:00 a 11:00,17:00 a 18:00"),
+				new Instalacion("Pista Tenis B-3", 100, TipoInstalacion.PISTA_TENIS, "10:00 a 11:00,14:00 a 15:00"),
+				new Instalacion("Pista Padel B-1", 100, TipoInstalacion.PISTA_PADEL, "9:30 a 10:30,13:30 a 14:30"),
+				new Instalacion("Pista Baloncesto B-2", 100, TipoInstalacion.PISTA_BALONCESTO, "11:00 a 12:00,15:00 a 16:00"),
+				new Instalacion("Sala Polivalente C-1", 100, TipoInstalacion.SALA_POLIVALENTE,"9:00 a 11:00,14:00 a 15:00"),
+				new Instalacion("Gimnasio C-2", 100, TipoInstalacion.GIMNASIO, "10:00 a 11:00,16:00 a 17:00") };
 	}
 
 	// Constructor con parámetros
@@ -57,16 +54,12 @@ public class CentroDeportivo {
 		this.reservas = new ArrayList<>();
 
 		this.instalaciones = new Instalacion[] {
-
-				new Instalacion("Piscina Olimpica A-1", 100, TipoInstalacion.PISCINA_OLIMPICA,
-						"9:00 a 12:00,13:00 a 15:00"),
-				new Instalacion("Pista Tenis B-3", 100, TipoInstalacion.PISTA_TENIS, "10:00 a 12:30,14:00 a 16:00"),
-				new Instalacion("Pista Padel B-1", 100, TipoInstalacion.PISTA_PADEL, "9:30 a 11:30,13:30 a 15:30"),
-				new Instalacion("Pista Baloncesto B-2", 100, TipoInstalacion.PISTA_BALONCESTO,
-						"11:00 a 13:00,15:00 a 17:00"),
-				new Instalacion("Sala Polivalente C-1", 100, TipoInstalacion.SALA_POLIVALENTE,
-						"9:00 a 11:00,14:00 a 16:00"),
-				new Instalacion("Gimnasio C-2", 100, TipoInstalacion.GIMNASIO, "10:00 a 12:00,16:00 a 18:00") };
+				new Instalacion("Piscina Olimpica A-1", 100, TipoInstalacion.PISCINA_OLIMPICA, "10:00 a 11:00,17:00 a 18:00"),
+				new Instalacion("Pista Tenis B-3", 100, TipoInstalacion.PISTA_TENIS, "10:00 a 11:00,14:00 a 15:00"),
+				new Instalacion("Pista Padel B-1", 100, TipoInstalacion.PISTA_PADEL, "9:30 a 10:30,13:30 a 14:30"),
+				new Instalacion("Pista Baloncesto B-2", 100, TipoInstalacion.PISTA_BALONCESTO, "11:00 a 12:00,15:00 a 16:00"),
+				new Instalacion("Sala Polivalente C-1", 100, TipoInstalacion.SALA_POLIVALENTE,"9:00 a 10:00,14:00 a 15:00"),
+				new Instalacion("Gimnasio C-2", 100, TipoInstalacion.GIMNASIO, "10:00 a 11:00,16:00 a 17:00") };
 	}
 
 	public static CentroDeportivo getInstancia() {
@@ -139,8 +132,7 @@ public class CentroDeportivo {
 					numParticipantes);
 			break;
 		case ACTIVIDAD_DIRIGIDA:
-			nuevaReserva = new Reserva_Actividad_Dirigida(fecha, horaInicio, duracion, estado, usuario, instalacion,
-					monitor, nombreActividad);
+			nuevaReserva = new Reserva_Actividad_Dirigida(fecha, horaInicio, duracion, estado, usuario, instalacion,nombreActividad);
 			break;
 		}
 
@@ -166,15 +158,15 @@ public class CentroDeportivo {
 		return false;
 	}
 
-	public boolean modificarReserva(int idReserva, String fecha, String horaInicio, Instalacion nuevaInstalacion) {
+	public boolean modificarReserva(int idReserva, String fecha, String tramohoras, Instalacion nuevaInstalacion) {
 		for (Reserva r : reservas) {
 			if (r.getIdReserva() == idReserva) {
 
 				// Verificamos si la nueva instalación/horario está libre
 
-				if (nuevaInstalacion.verificarDisponibilidad(fecha, horaInicio)) {
+				if (nuevaInstalacion.verificarDisponibilidad(fecha, tramohoras)) {
 					r.setFecha(fecha);
-					r.setHoraInicio(horaInicio);
+					r.setHoraInicio(tramohoras);
 
 					// Como la instalación es nueva, actualizamos la referencia en la reserva
 
@@ -201,7 +193,7 @@ public class CentroDeportivo {
 		return encontradas.toArray(new Reserva[0]);
 	}
 
-	public String[] consultarOcupacionDiaria(String fecha) {
+	public void consultarOcupacionDiaria(String fecha) {
 		int contador = 0;
 		for (Reserva r : reservas) {
 			if (r.getFecha().equals(fecha)
@@ -211,10 +203,10 @@ public class CentroDeportivo {
 		}
 
 		String info = "Informe del día " + fecha + ": Hay " + contador + " reservas confirmadas.";
-		return new String[] { info };
+		System.out.println(info);
 	}
 
-	public String[] consultarOcupacionSemanal(String[] fechasSemana) {
+	public void consultarOcupacionSemanal(String[] fechasSemana) {
 		String[] resultados = new String[fechasSemana.length];
 		for (int i = 0; i < fechasSemana.length; i++) {
 			int contador = 0;
@@ -227,7 +219,9 @@ public class CentroDeportivo {
 			}
 			resultados[i] = "Ocupación para " + fecha + ": " + contador + " reservas activas.";
 		}
-		return resultados;
+		for (String r : resultados) {
+		    System.out.println(r);
+		}
 	}
 
 	public String[] identificarTramosLibres(Instalacion instalacion, String fecha) {

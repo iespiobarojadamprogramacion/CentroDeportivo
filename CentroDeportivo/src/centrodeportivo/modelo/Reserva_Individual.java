@@ -8,7 +8,6 @@ public class Reserva_Individual extends Reserva {
 		super(fecha, horaInicio, duracion, estado, usuario, instalacion);
 	}
 
-	@Override
 	public String consultarReglasUso() {
 
 		return "Reglas para Reserva Individual:\n"
