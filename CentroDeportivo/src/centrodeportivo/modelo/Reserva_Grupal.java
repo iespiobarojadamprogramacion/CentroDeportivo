@@ -43,4 +43,4 @@ public class Reserva_Grupal extends Reserva {
 				+ "3. Si el responsable sale del centro, sus acompañantes también deben salir.\n"
 				+ "Cualquier duda, contacte por teléfono o en recepción.";
 	}
-}SS
+}
