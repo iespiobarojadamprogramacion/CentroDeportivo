@@ -1,82 +1,82 @@
 package centrodeportivo.modelo;
 
-public abstract class Reserva {
+import java.util.ArrayList;
 
+public class Usuario {
+
+	// Variable estática para generar el ID autoincremental automáticamente 
+	
 	private static int contador = 0;
-	private int idReserva;
-	private String fecha;
-	private String horaInicio;
-	private String duracion;
-	private Estado_Reserva estado;
 
-	// Atributos de relación
+	private int idUsuario;
+	private String nombreCompleto;
+	private String telefono;
+	private String contrasena;
 
-	private Usuario usuario;
-	private Instalacion instalacion;
+	// Lista que almacena las reservas asociadas a este usuario (0..*)
+	
+	private ArrayList<Reserva> reservas;
 
-	public Reserva(String fecha, String horaInicio, String duracion, Estado_Reserva estado, Usuario usuario,
-			Instalacion instalacion) {
+	// Constructor que inicializa los datos del usuario y genera su ID
+	
+	public Usuario(String nombreCompleto, String telefono, String contrasena) {
+		this.idUsuario = ++contador;
+		this.nombreCompleto = nombreCompleto;
+		this.telefono = telefono;
+		this.contrasena = contrasena;
 
-		this.idReserva = ++contador;
-		this.fecha = fecha;
-		this.horaInicio = horaInicio;
-		this.duracion = duracion;
-		this.estado = estado;
-		this.usuario = usuario;
-		this.instalacion = instalacion;
+		// Inicializamos la lista de reservas vacía para evitar errores al añadirlo luego
+		
+		this.reservas = new ArrayList<>();
 	}
 
-	public int getIdReserva() {
-		return idReserva;
+	public int getIdUsuario() {
+		return idUsuario;
 	}
 
-	public String getFecha() {
-		return fecha;
+	public String getNombreCompleto() {
+		return nombreCompleto;
 	}
 
-	public void setFecha(String fecha) {
-		this.fecha = fecha;
+	public void setNombreCompleto(String nombreCompleto) {
+		this.nombreCompleto = nombreCompleto;
 	}
 
-	public String getHoraInicio() {
-		return horaInicio;
+	public String getTelefono() {
+		return telefono;
 	}
 
-	public void setHoraInicio(String horaInicio) {
-		this.horaInicio = horaInicio;
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
 	}
 
-	public String getDuracion() {
-		return duracion;
+	public String getContrasena() {
+		return contrasena;
 	}
 
-	public void setDuracion(String duracion) {
-		this.duracion = duracion;
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
 	}
 
-	public Estado_Reserva getEstado() {
-		return estado;
+	// Añade una nueva reserva al historial del usuario si no es nula
+	
+	public void addReserva(Reserva r) {
+		if (r != null) {
+			this.reservas.add(r);
+		}
 	}
 
-	public void setEstado(Estado_Reserva estado) {
-		this.estado = estado;
+	// Devuelve el historial completo convirtiendo la lista a un array de tipo Reserva[]
+	
+	public Reserva[] consultarHistorialUso() {
+		return this.reservas.toArray(new Reserva[0]);
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
+	// Formato claro para mostrar los datos del usuario por consola
+	
+	@Override
+	public String toString() {
+		return "--- DATOS DEL USUARIO ---\n" + "ID: " + getIdUsuario() + "\n" + "Nombre: " + getNombreCompleto() + "\n"
+				+ "Teléfono: " + getTelefono() + "\n" + "-------------------------";
 	}
-
-	public Instalacion getInstalacion() {
-		return instalacion;
-	}
-
-	public void setInstalacion(Instalacion instalacion) {
-		this.instalacion = instalacion;
-	}
-
-	// Método abstracto
-
-	// Cada hija (individual, grupal, dirigida) lo implementará a su manera
-
-	public abstract String consultarReglasUso();
 }
