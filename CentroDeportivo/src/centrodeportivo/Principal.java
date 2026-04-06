@@ -3,18 +3,18 @@ package centrodeportivo;
 import java.util.Scanner;
 import centrodeportivo.modelo.*;
 
-
 public class Principal {
 
 	public static void main(String[] args) {
 
-		Scanner sc = new Scanner(System.in);
+		Scanner sc = new Scanner(System.in); 
 
+		// Llamamos al centro deportivo 
+		
 		CentroDeportivo centro = CentroDeportivo.getInstancia();
 
-		// Esta variable guarda al usuario que se registre para poder usarlo en las
-		// reservas
-
+		// Variable para saber qué usuario está usando el programa ahora
+		
 		Usuario usuarioActual = null;
 
 		System.out.println("=== Sistema de gestión deportiva (Grupo 3) ===");
@@ -22,34 +22,32 @@ public class Principal {
 		int opcion = 0;
 
 		do {
-			System.out.println("\n--- Menú ---");
-			System.out.println("1. Registrar un usuario (paso previo para reservar)");
-			System.out.println("2. ELimianr Usuario");
-			System.out.println("3. Ver Instalaciones");
-			System.out.println("4. Ver Tramos libres");
-			System.out.println("5. Ver Ocupacion");
-			System.out.println("6. Crear Reserva");
-			System.out.println("7. Modificar Reserva");
-			System.out.println("8. Cancelar Reserva");
-			System.out.println("9. Historial");
+			System.out.println("\n--- Menú Principal ---");
+			System.out.println("1. Registrar un usuario (Paso previo para reservar)");
+			System.out.println("2. Eliminar Usuario");
+			System.out.println("3. Ver todas las Instalaciones");
+			System.out.println("4. Consultar Tramos horarios libres");
+			System.out.println("5. Ver Ocupación (Diaria o Semanal)");
+			System.out.println("6. Crear una nueva Reserva");
+			System.out.println("7. Modificar una Reserva existente");
+			System.out.println("8. Cancelar una Reserva");
+			System.out.println("9. Ver mi Historial y Reglas de uso");
 			System.out.println("10. Salir");
 			System.out.print("Seleccione una opción: ");
 
-			// Validación básica para evitar que el programa se dañe si no ingresan un
-			// número
-
+			// Evitamos que el programa falle si no introducen un número
+			
 			if (sc.hasNextInt()) {
 				opcion = sc.nextInt();
 				sc.nextLine();
 			} else {
-				System.out.println("Por favor, introduce un número válido.");
+				System.out.println("Error: Introduce un número del 1 al 10.");
 				sc.nextLine();
 				continue;
 			}
 
 			switch (opcion) {
-			case 1: // Registro del usuario
-				System.out.println("\n-- Formulario de Registro --");
+			case 1: // Registro
 				System.out.print("Nombre completo: ");
 				String nombre = sc.nextLine();
 				System.out.print("Teléfono: ");
@@ -57,311 +55,170 @@ public class Principal {
 				System.out.print("Contraseña: ");
 				String pass = sc.nextLine();
 
-				// Creamos el objeto y lo registramos
-
+				// Creamos el objeto y lo registramos en el sistema
+				
 				usuarioActual = new Usuario(nombre, tel, pass);
 				centro.registrarUsuario(usuarioActual);
-
 				System.out.println("\n¡Usuario registrado con éxito!");
-				System.out.println(usuarioActual.toString());
 				break;
 
-			case 2:// Eliminar usuario
-				System.out.print("Nombre del usuario a eliminar: ");
-				String n = sc.nextLine();
-				System.out.print("Contraseña de seguridad: ");
-				String p = sc.nextLine();
-
-				if (centro.eliminarUsuario(n, p)) {
+			case 2: // Eliminar
+				System.out.print("Nombre: ");
+				String nDel = sc.nextLine();
+				System.out.print("Contraseña: ");
+				String pDel = sc.nextLine();
+				if (centro.eliminarUsuario(nDel, pDel)) {
 					System.out.println("Usuario eliminado correctamente.");
-					usuarioActual = null; // Reseteamos la sesión
+					usuarioActual = null; // Reiniciamos la sesión
 				} else {
 					System.out.println("Error: Los datos no coinciden.");
 				}
 				break;
-			case 3:// Visualización de instalaciones
-				System.out.println("\n-- Listado de instalaciones (ordenadas por id) --");
+
+			case 3: // Ver instalaciones
+				System.out.println("\n-- Instalaciones disponibles --");
 				Instalacion[] lista = centro.getInstalacionesOrdenadasPorId();
-				for (int i = 0; i < lista.length; i++) {
-					System.out.println(i + ". ID: " + lista[i].getIdInstalacion() + " - " + lista[i].getNombre());
+				for (Instalacion i : lista) {
+					System.out.println(i.getIdInstalacion() + ": " + i.getNombre());
 				}
 				break;
 
-			case 4:// VEr tramos libres
-				
-				System.out.println("De que instalción desea ver sus tramos libres");
-				
+			case 4: // Tramos libres 
 				Instalacion[] pistas = centro.getInstalacionesOrdenadasPorId();
-
-				System.out.println("Seleccione el número de la instalación deseada:");
-
-				for (int i = 0; i < pistas.length; i++) {
-					System.out.println(i + " -> " + pistas[i].getNombre());
-				}
-				
-				int selec = sc.nextInt();
-
+				for (Instalacion p : pistas)
+					System.out.println(p.getIdInstalacion() + " -> " + p.getNombre());
+				System.out.print("ID Instalación (1 al 6): ");
+				int idI = sc.nextInt();
 				sc.nextLine();
-				
-				System.out.println("de que tramo?");
-				
-				System.out.println("Los horarios de la Instalacion elegida son: " +
-						"\n" + pistas[selec].getHorarioDisponibilidad());
 
-						String fecha = sc.nextLine();
-				
-				String[] resultado = centro.identificarTramosLibres(pistas[selec], fecha);
-
-				System.out.println("Los tramos libres para reservar son: ");
-				
-				for (String r : resultado) {
-				    System.out.println(r);
-				}
-				break;
-				
-			case 5://Ver Ocupación
-				
-				System.out.println("¿Que ocupación desea ver?");
-				System.out.println("1. Ocupacion Diaria");
-				System.out.println("2. Ocupacion Semanal");
-				
-				String ocupacion_pedida = sc.nextLine();
-				
-				if(ocupacion_pedida.equalsIgnoreCase("Ocupacion Diaria")) {
-					
-					System.out.println("¿De que fecha quiere consultar la ocupación?");
-					System.out.println("Use el siguiente formato siempre. ej: 01/04/26");
-					
-					String fechas = sc.nextLine();
-					
-					centro.consultarOcupacionDiaria(fechas);
-					
-				}else if(ocupacion_pedida.equalsIgnoreCase("Ocupacion Semanal")) {
-					
-					System.out.println("¿Dime los 7 dias que va a consultar");
-					System.out.println("Use el siguiente formato siempre. ej: 01/04/26");
-					
-					String [] fechas = {sc.nextLine(),sc.nextLine(),sc.nextLine(),
-							sc.nextLine(),sc.nextLine(),sc.nextLine(),sc.nextLine()};
-					
-					centro.consultarOcupacionSemanal(fechas);
-					
-					
-				}else {
-					System.out.println("No existe esa ocupación, intentelo más tarde.");
-				}
-				
-				break;
-			case 6: // Reservas
-
-				if (usuarioActual == null) {
-
-					System.out.println("Error: No hay un usuario activo. Debe registrarse en la Opción 1.");
-
+				if (idI >= 1 && idI <= pistas.length) {
+					System.out.print("Fecha (ej: 04/04/2026): ");
+					String fLibre = sc.nextLine();
+					String[] libres = centro.identificarTramosLibres(pistas[idI - 1], fLibre);
+					System.out.println("Horas libres encontradas:");
+					for (String s : libres)
+						System.out.println("- " + s);
 				} else {
+					System.out.println("Error: El número debe estar entre 1 y " + pistas.length);
+				}
+				break;
 
-					System.out.println("\n-- Iniciando Reserva para: " + usuarioActual.getNombreCompleto() + " --");
+			case 5: // Ocupación 
+				System.out.println("1. Ocupación de un día / 2. Ocupación de 7 días");
+				int tipoO = sc.nextInt();
+				sc.nextLine();
+				if (tipoO == 1) {
+					System.out.print("Fecha a consultar: ");
+					String fD = sc.nextLine();
+					for (String s : centro.consultarOcupacionDiaria(fD))
+						System.out.println(s);
+				} else {
+					System.out.println("Introduce las 7 fechas consecutivas:");
+					String[] fS = new String[7];
+					for (int j = 0; j < 7; j++)
+						fS[j] = sc.nextLine();
+					for (String s : centro.consultarOcupacionSemanal(fS))
+						System.out.println(s);
+				}
+				break;
 
-					Instalacion[] insta = centro.getInstalacionesOrdenadasPorId();
-
-					System.out.println("Seleccione el número de la instalación deseada:");
-
-					for (int i = 0; i < insta.length; i++) {
-						System.out.println(i + " -> " + insta[i].getNombre());
-					}
-					
-					int slece = sc.nextInt();
-
+			case 6: // Crear reserva con polimorfismo
+				if (usuarioActual == null) {
+					System.out.println("Aviso: Debes registrarte primero en la opción 1.");
+				} else {
+					Instalacion[] ins = centro.getInstalacionesOrdenadasPorId();
+					for (Instalacion p : ins)
+						System.out.println(p.getIdInstalacion() + " -> " + p.getNombre());
+					System.out.print("ID Instalación: ");
+					int idSel = sc.nextInt();
 					sc.nextLine();
 
+					if (idSel >= 1 && idSel <= ins.length) {
+						System.out.print("Fecha: ");
+						String fR = sc.nextLine();
+						System.out.print("Hora exacta (ej: 10:00 a 11:00): ");
+						String hR = sc.nextLine();
+						System.out.println("Tipo: INDIVIDUAL, GRUPAL o ACTIVIDAD_DIRIGIDA");
+						String tR = sc.nextLine().toUpperCase();
 
-					if (slece >= 0 && slece < insta.length) {
-
-						System.out.print("Introduzca fecha (ej: 25/03/2026): ");
-
-						String fechas = sc.nextLine();
-
-						System.out.print("Introduzca horario (ej: 10:00 a 11:00): \n");
-						
-						System.out.println("Los horarios de la Instalacion elegida son: " +
-						"\n" + insta[slece].getHorarioDisponibilidad());
-
-						String hora = sc.nextLine();
-
-						// Bucle para llamar al método del centro que usa polimorfismo internamente
-
-						System.out.println("¿Que tipo de reserva es? (ESCRIBELO) ");
-
-						System.out.println("1. INDIVIDUAL"+"\n"+
-										   "2. GRUPAL"+"\n"+
-										   "3. ACTIVIDAD_DIRIGIDA"+ "\n");
-
-						String tipo = sc.nextLine().toUpperCase();
-
-						if(tipo.equals("INDIVIDUAL")) {
-
-						//Reserva Individual
-
-						boolean exito = centro.crearReserva(usuarioActual, insta[slece], fechas, hora, "1h",
-								Estado_Reserva.ACTIVA, null, null, 1, Tipo_Reserva.INDIVIDUAL);
-						
-						if (exito) {
-							System.out.println("¡Reserva confirmada y guardada en el historial!");
-						} else {
-							System.out.println("Fallo: La pista ya está ocupada o el horario no existe.");
+						boolean ok = false;
+						if (tR.equals("INDIVIDUAL")) {
+							ok = centro.crearReserva(usuarioActual, ins[idSel - 1], fR, hR, "1h", Estado_Reserva.ACTIVA,
+									null, null, 1, Tipo_Reserva.INDIVIDUAL);
+						} else if (tR.equals("GRUPAL")) {
+							System.out.print("¿Cuántas personas sois?: ");
+							int num = sc.nextInt();
+							sc.nextLine();
+							ok = centro.crearReserva(usuarioActual, ins[idSel - 1], fR, hR, "1h", Estado_Reserva.ACTIVA,
+									null, null, num, Tipo_Reserva.GRUPAL);
+						} else if (tR.equals("ACTIVIDAD_DIRIGIDA")) {
+							System.out.print("¿Qué actividad es? (ej: Yoga): ");
+							String act = sc.nextLine();
+							ok = centro.crearReserva(usuarioActual, ins[idSel - 1], fR, hR, "1h", Estado_Reserva.ACTIVA,
+									"Monitor Asignado", act, 1, Tipo_Reserva.ACTIVIDAD_DIRIGIDA);
 						}
-
-					}else if (tipo.equals("GRUPAL")) {
-
-						System.out.println("Cuantos sois?");
-
-						int num = sc.nextInt();
-
-						boolean exito = centro.crearReserva(usuarioActual, insta[slece], fechas, hora, "1h",
-								Estado_Reserva.ACTIVA, null, null, num, Tipo_Reserva.GRUPAL);
-
-						if (exito) {
-							System.out.println("¡Reserva confirmada y guardada en el historial!");
-						} else {
-							System.out.println("Fallo: La pista ya está ocupada o el horario no existe.");
-						}
-
-					}else if(tipo.equals("ACTIVIDAD_DIRIGIDA")) {
-
-						String[] monitores = { "Juan", "Ana", "Carlos", "Lucas", "Martin", "Alejandra", "Maria" };
-
-						int num = (int) (Math.random() * monitores.length);
-
-						String monitor = monitores[num];
-
-						System.out.println("¿Cual es tu Actividad dirigida?");
-
-						String actividad = sc.nextLine();
-
-						boolean exito = centro.crearReserva(usuarioActual, insta[slece], fechas, hora, "1h",
-								Estado_Reserva.ACTIVA, monitor, actividad, 1, Tipo_Reserva.ACTIVIDAD_DIRIGIDA);
-					
-						if (exito) {
-							System.out.println("¡Reserva confirmada y guardada en el historial!");
-						} else {
-							System.out.println("Fallo: La pista ya está ocupada o el horario no existe.");
-						}
-					  }
+						System.out.println(ok ? "¡Reserva realizada con éxito!"
+								: "Fallo: Ya está ocupado o el horario no existe.");
+					} else {
+						System.out.println("Error: Ese ID de instalación no existe.");
 					}
 				}
-
 				break;
-			case 7: //Modificar reserva
-				System.out.println("Dime el Id de la Reserva que quieres modificar");
-				
+
+			case 7: // Modificar reserva
+			case 8: // Cancelar reserva
 				if (usuarioActual == null) {
-					System.out.println("Primero registre un usuario.");
+					System.out.println("Error: Primero registre un usuario.");
 				} else {
-					System.out.println("\n-- Historial de reservas de " + usuarioActual.getNombreCompleto() + " --");
 					Reserva[] h = usuarioActual.consultarHistorialUso();
 					if (h.length == 0) {
-						System.out.println("No se han encontrado reservas registradas.");
+						System.out.println("No tienes ninguna reserva en tu historial.");
 					} else {
-						for (Reserva r : h) {
-							System.out.println("- ID Reserva: " + r.getIdReserva() + " Fecha: " + 
-						r.getFecha() + " | Hora: " + r.getHoraInicio()+ " | Lugar: " + r.getInstalacion().getNombre());
-						}
-					}
-				}
-				
-				System.out.println(" \n Cual es el id de la reserva que quiere cambiar \n");
-				
-				int Id_reserva = sc.nextInt();
-				sc.nextLine();
-				
-				Instalacion[] inst = centro.getInstalacionesOrdenadasPorId();
+						for (Reserva r : h)
+							System.out.println("ID: " + r.getIdReserva() + " | Fecha: " + r.getFecha());
+						System.out.print("Indica el ID de la reserva a gestionar: ");
+						int idR = sc.nextInt();
+						sc.nextLine();
 
-				System.out.println("Seleccione el número de la instalación nueva: ");
-
-				for (int i = 0; i < inst.length; i++) {
-					System.out.println(i + " -> " + inst[i].getNombre());
-				}
-				
-				int sleec = sc.nextInt();
-				sc.nextLine();
-				
-				System.out.println("Cual es la nueva fecha de la reserva"+"\n");
-				
-				String fechaa = sc.nextLine();
-				
-				System.out.println("Cual es la nueva hora de la reserva"+"\n");
-				
-				System.out.println("Las horas reservables de esa Instalacion son: ");
-				
-				inst[sleec].getHorarioDisponibilidad();
-		
-				String[] resultados = centro.identificarTramosLibres(inst[sleec], fechaa);
-
-				System.out.println("Los tramos libres para reservar son: ");
-		
-				for (String r : resultados) {
-					System.out.println(r);
-				}
-				
-				String hora = sc.nextLine();
-				
-				centro.modificarReserva(Id_reserva, fechaa, hora, inst[sleec]);
-				
-				break;
-				
-			case 8://Cancelar reserva
-				System.out.println("Dime el Id de la Reserva que quieres modificar");
-				
-				if (usuarioActual == null) {
-					System.out.println("Primero registre un usuario.");
-				} else {
-					System.out.println("\n-- Historial de reservas de " + usuarioActual.getNombreCompleto() + " --");
-					Reserva[] h = usuarioActual.consultarHistorialUso();
-					if (h.length == 0) {
-						System.out.println("No se han encontrado reservas registradas.");
-					} else {
-						for (Reserva r : h) {
-							System.out.println("- ID Reserva: " + r.getIdReserva() + " Fecha: " + 
-						r.getFecha() + " | Hora: " + r.getHoraInicio()+ " | Lugar: " + r.getInstalacion().getNombre());
-						}
-					}
-				}
-				
-				System.out.println(" \n Cual es el id de la reserva que quiere cancelar \n");
-				
-				int Id = sc.nextInt();
-				
-				sc.nextLine();
-				centro.cancelarReserva(Id);
-				
-				break; 
-			case 9:// Historial
-				if (usuarioActual == null) {
-					System.out.println("Primero registre un usuario.");
-				} else {
-					System.out.println("\n-- Historial de reservas de " + usuarioActual.getNombreCompleto() + " --");
-					Reserva[] h = usuarioActual.consultarHistorialUso();
-					if (h.length == 0) {
-						System.out.println("No se han encontrado reservas registradas.");
-					} else {
-						for (Reserva r : h) {
-							System.out.println("- Fecha: " + r.getFecha() + " | Hora: " + r.getHoraInicio()
-									+ " | Lugar: " + r.getInstalacion().getNombre());
-							// Aquí se ve el polimorfismo en acción
-							System.out.println("  Reglas: " + r.consultarReglasUso() + "\n");
+						if (opcion == 7) {
+							System.out.print("Nueva Fecha: ");
+							String nf = sc.nextLine();
+							System.out.print("Nueva Hora: ");
+							String nh = sc.nextLine();
+							// Usamos la instalación que ya tiene la reserva para el cambio
+							centro.modificarReserva(idR, nf, nh, h[0].getInstalacion());
+							System.out.println("Reserva modificada correctamente.");
+						} else {
+							centro.cancelarReserva(idR);
+							System.out.println("Reserva cancelada correctamente.");
 						}
 					}
 				}
 				break;
+
+			case 9: // Historial 
+				if (usuarioActual == null) {
+					System.out.println("No hay ningún usuario activo. Regístrate en la Opción 1.");
+				} else {
+					System.out.println("\n-- Historial de " + usuarioActual.getNombreCompleto() + " --");
+					// Recorremos las reservas y llamamos al método polimórfico
+					for (Reserva r : usuarioActual.consultarHistorialUso()) {
+						System.out.println("Reserva ID " + r.getIdReserva() + ": " + r.getFecha() + " en "
+								+ r.getInstalacion().getNombre());
+						// Aquí se ve el polimorfismo, reglas según si es individual, grupal o dirigida
+						System.out.println("   Reglas aplicadas: " + r.consultarReglasUso());
+					}
+				}
+				break;
+
 			case 10: // Salir
-				System.out.println("Cerrando aplicación...");
+				System.out.println("Cerrando el sistema deportivo... ¡Hasta pronto!");
 				break;
 
 			default:
-				System.out.println("Opción no válida.");
+				System.out.println("Opción no válida, intenta de nuevo con un número del 1 al 10.");
 			}
 		} while (opcion != 10);
-
 		sc.close();
 	}
 }
