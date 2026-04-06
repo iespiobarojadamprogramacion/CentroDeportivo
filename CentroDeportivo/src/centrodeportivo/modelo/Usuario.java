@@ -4,27 +4,29 @@ import java.util.ArrayList;
 
 public class Usuario {
 
-	// Variable estática para autoincrementar el id automáticamente
-
+	// Variable estática para generar el ID autoincremental automáticamente 
+	
 	private static int contador = 0;
+
 	private int idUsuario;
 	private String nombreCompleto;
 	private String telefono;
 	private String contrasena;
 
-	// Aquí aplicamos la relación que tiene un usuario
-
+	// Lista que almacena las reservas asociadas a este usuario (0..*)
+	
 	private ArrayList<Reserva> reservas;
 
+	// Constructor que inicializa los datos del usuario y genera su ID
+	
 	public Usuario(String nombreCompleto, String telefono, String contrasena) {
-
 		this.idUsuario = ++contador;
 		this.nombreCompleto = nombreCompleto;
 		this.telefono = telefono;
 		this.contrasena = contrasena;
 
-		// Inicializamos la lista de reservas vacía para que no dé error al añadir
-
+		// Inicializamos la lista de reservas vacía para evitar errores al añadirlo luego
+		
 		this.reservas = new ArrayList<>();
 	}
 
@@ -56,23 +58,25 @@ public class Usuario {
 		this.contrasena = contrasena;
 	}
 
-	// Método para que el centro deportivo le asigne una reserva a este usuario
-
+	// Añade una nueva reserva al historial del usuario si no es nula
+	
 	public void addReserva(Reserva r) {
 		if (r != null) {
 			this.reservas.add(r);
 		}
 	}
 
-	// Método para ver el historial
-
+	// Devuelve el historial completo convirtiendo la lista a un array de tipo Reserva[]
+	
 	public Reserva[] consultarHistorialUso() {
 		return this.reservas.toArray(new Reserva[0]);
 	}
 
+	// Formato claro para mostrar los datos del usuario por consola
+	
 	@Override
 	public String toString() {
-		return "\nUsuario creado con éxito! \n" + "ID: " + getIdUsuario() + "\n" + "Nombre: " + getNombreCompleto()
-				+ "\n" + "Teléfono: " + getTelefono() + "\n";
+		return "--- DATOS DEL USUARIO ---\n" + "ID: " + getIdUsuario() + "\n" + "Nombre: " + getNombreCompleto() + "\n"
+				+ "Teléfono: " + getTelefono() + "\n" + "-------------------------";
 	}
 }
