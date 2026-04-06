@@ -1,82 +1,94 @@
 package centrodeportivo.modelo;
 
-import java.util.ArrayList;
+// Clase abstracta que representa la base para cualquier tipo de reserva 
 
-public class Usuario {
+public abstract class Reserva {
 
-	// Variable estática para generar el ID autoincremental automáticamente 
+	// Variable estática para generar el ID autoincremental de la reserva
 	
 	private static int contador = 0;
 
-	private int idUsuario;
-	private String nombreCompleto;
-	private String telefono;
-	private String contrasena;
+	private int idReserva;
+	private String fecha;
+	private String horaInicio;
+	private String duracion;
+	private Estado_Reserva estado;
 
-	// Lista que almacena las reservas asociadas a este usuario (0..*)
+	// Atributos de relación 
 	
-	private ArrayList<Reserva> reservas;
+	private Usuario usuario;
+	private Instalacion instalacion;
 
-	// Constructor que inicializa los datos del usuario y genera su ID
+	// Constructor que inicializa todos los datos de la reserva
 	
-	public Usuario(String nombreCompleto, String telefono, String contrasena) {
-		this.idUsuario = ++contador;
-		this.nombreCompleto = nombreCompleto;
-		this.telefono = telefono;
-		this.contrasena = contrasena;
-
-		// Inicializamos la lista de reservas vacía para evitar errores al añadirlo luego
-		
-		this.reservas = new ArrayList<>();
+	public Reserva(String fecha, String horaInicio, String duracion, Estado_Reserva estado, Usuario usuario,
+			Instalacion instalacion) {
+		this.idReserva = ++contador;
+		this.fecha = fecha;
+		this.horaInicio = horaInicio;
+		this.duracion = duracion;
+		this.estado = estado;
+		this.usuario = usuario;
+		this.instalacion = instalacion;
 	}
 
-	public int getIdUsuario() {
-		return idUsuario;
+	public int getIdReserva() {
+		return idReserva;
 	}
 
-	public String getNombreCompleto() {
-		return nombreCompleto;
+	public String getFecha() {
+		return fecha;
 	}
 
-	public void setNombreCompleto(String nombreCompleto) {
-		this.nombreCompleto = nombreCompleto;
-	}
-
-	public String getTelefono() {
-		return telefono;
-	}
-
-	public void setTelefono(String telefono) {
-		this.telefono = telefono;
-	}
-
-	public String getContrasena() {
-		return contrasena;
-	}
-
-	public void setContrasena(String contrasena) {
-		this.contrasena = contrasena;
-	}
-
-	// Añade una nueva reserva al historial del usuario si no es nula
+	// Setter añadido para cumplir con modificar la fecha
 	
-	public void addReserva(Reserva r) {
-		if (r != null) {
-			this.reservas.add(r);
-		}
+	public void setFecha(String fecha) {
+		this.fecha = fecha;
 	}
 
-	// Devuelve el historial completo convirtiendo la lista a un array de tipo Reserva[]
-	
-	public Reserva[] consultarHistorialUso() {
-		return this.reservas.toArray(new Reserva[0]);
+	public String getHoraInicio() {
+		return horaInicio;
 	}
 
-	// Formato claro para mostrar los datos del usuario por consola
+	// Nos ayudara a modificar el horario
 	
-	@Override
-	public String toString() {
-		return "--- DATOS DEL USUARIO ---\n" + "ID: " + getIdUsuario() + "\n" + "Nombre: " + getNombreCompleto() + "\n"
-				+ "Teléfono: " + getTelefono() + "\n" + "-------------------------";
+	public void setHoraInicio(String horaInicio) {
+		this.horaInicio = horaInicio;
 	}
+
+	public String getDuracion() {
+		return duracion;
+	}
+
+	// Modificar la duración
+	
+	public void setDuracion(String duracion) {
+		this.duracion = duracion;
+	}
+
+	public Estado_Reserva getEstado() {
+		return estado;
+	}
+
+	public void setEstado(Estado_Reserva estado) {
+		this.estado = estado;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public Instalacion getInstalacion() {
+		return instalacion;
+	}
+
+	// Setter también añadido para cumplir con el apartado 5 del PDF para modificar la instalación
+	
+	public void setInstalacion(Instalacion instalacion) {
+		this.instalacion = instalacion;
+	}
+
+	// Método abstracto que cada clase hija implementará con sus propias reglas
+	
+	public abstract String consultarReglasUso();
 }
