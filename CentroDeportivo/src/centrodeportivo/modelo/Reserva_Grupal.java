@@ -1,5 +1,7 @@
 package centrodeportivo.modelo;
 
+// Clase hija que representa una reserva para un grupo de personas 
+
 public class Reserva_Grupal extends Reserva {
 
 	private int numParticipantes;
@@ -19,6 +21,10 @@ public class Reserva_Grupal extends Reserva {
 		return numParticipantes;
 	}
 
+	public void setNumParticipantes(int numParticipantes) {
+		this.numParticipantes = numParticipantes;
+	}
+
 	public int getNumMinimoParticipantes() {
 		return numMinimoParticipantes;
 	}
@@ -27,12 +33,9 @@ public class Reserva_Grupal extends Reserva {
 		return numMaximoParticipantes;
 	}
 
-	public void setNumParticipantes(int numParticipantes) {
-		this.numParticipantes = numParticipantes;
-	}
+	// Sobreescribimos el método abstracto con las reglas específicas
 
-	// Implementamos el método abstracto con las reglas específicas
-
+	@Override
 	public String consultarReglasUso() {
 		return "Reglas para Reserva Grupal (" + numParticipantes + " participantes):\n"
 				+ "1. La impuntualidad no es reembolsable (tarde a partir de 15 min).\n"
@@ -40,4 +43,4 @@ public class Reserva_Grupal extends Reserva {
 				+ "3. Si el responsable sale del centro, sus acompañantes también deben salir.\n"
 				+ "Cualquier duda, contacte por teléfono o en recepción.";
 	}
-}
+}SS
