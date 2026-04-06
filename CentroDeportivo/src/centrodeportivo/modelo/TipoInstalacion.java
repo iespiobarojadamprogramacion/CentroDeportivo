@@ -1,7 +1,9 @@
 package centrodeportivo.modelo;
 
-public enum TipoInstalacion {
+// Enumerado que define las categorías de reservas disponibles en el centro 
 
-	PISTA_TENIS, PISTA_PADEL, PISTA_BALONCESTO, PISCINA_OLIMPICA, PISCINA_LIBRE, SALA_POLIVALENTE, GIMNASIO;
+public enum Tipo_Reserva {
+
+	INDIVIDUAL, GRUPAL, ACTIVIDAD_DIRIGIDA;
 
 }
