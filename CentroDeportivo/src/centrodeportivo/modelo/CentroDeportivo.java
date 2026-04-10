@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 
 public class CentroDeportivo {
+	
+	//PRUEBA
 
 	// Variable para que todo el programa comparta un único centro deportivo 
 
