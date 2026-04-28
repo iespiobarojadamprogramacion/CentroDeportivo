@@ -6,6 +6,8 @@ import centrodeportivo.modelo.*;
 public class Principal {
 
 	public static void main(String[] args) {
+		
+
 
 		Scanner sc = new Scanner(System.in); 
 
@@ -166,6 +168,8 @@ public class Principal {
 				break;
 
 			case 7: // Modificar reserva
+				
+				
 			case 8: // Cancelar reserva
 				if (usuarioActual == null) {
 					System.out.println("Error: Primero registre un usuario.");
@@ -222,3 +226,4 @@ public class Principal {
 		sc.close();
 	}
 }
+

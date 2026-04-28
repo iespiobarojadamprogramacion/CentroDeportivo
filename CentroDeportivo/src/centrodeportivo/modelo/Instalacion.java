@@ -88,4 +88,9 @@ public class Instalacion {
 			this.reservas.add(reserva);
 		}
 	}
+	
+	public String toString() {
+	    return idInstalacion + " - " + nombre + " (" + tipo + ")";
+	}
+	
 }

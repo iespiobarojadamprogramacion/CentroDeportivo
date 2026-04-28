@@ -71,30 +71,54 @@ public class CentroDeportivo {
 
 	// Registra un nuevo usuario en el sistema
 
-	public void registrarUsuario(Usuario nuevoUsuario) {
-		if (nuevoUsuario != null) {
-			usuarios.add(nuevoUsuario);
-		}
+	public boolean registrarUsuario(Usuario nuevoUsuario) {
+
+	    if (nuevoUsuario == null) return false;
+
+	    if (nuevoUsuario.getNombreCompleto().isBlank()
+	            || nuevoUsuario.getContrasena().isBlank()
+	            || nuevoUsuario.getTelefono().isBlank()) {
+	        return false;
+	    }
+
+	    for (Usuario u : usuarios) {
+	        if (u.getNombreCompleto().equalsIgnoreCase(nuevoUsuario.getNombreCompleto())) {
+	            return false; // duplicado
+	        }
+	    }
+
+	    usuarios.add(nuevoUsuario);
+	    return true;
 	}
+
 
 	// Elimina un usuario si el nombre y contraseña coinciden
-
 	public boolean eliminarUsuario(String nombre, String contrasena) {
-		for (int i = 0; i < usuarios.size(); i++) {
-			Usuario u = usuarios.get(i);
-			if (u.getNombreCompleto().equals(nombre) && u.getContrasena().equals(contrasena)) {
-				usuarios.remove(i);
-				return true;
-			}
-		}
-		return false;
+
+	    for (Usuario u : usuarios) {
+	        if (u.getNombreCompleto().equals(nombre)
+	                && u.getContrasena().equals(contrasena)) {
+
+	            usuarios.remove(u);
+	            reservas.removeIf(r -> r.getUsuario().equals(u));
+
+	            return true;
+	        }
+	    }
+
+	    return false;
 	}
+
 
 	// Crea una reserva usando polimorfismo según el tipo
 
 	public boolean crearReserva(Usuario usuario, Instalacion instalacion, String fecha, String horaInicio,
 			String duracion, Estado_Reserva estado, String monitor, String nombreActividad, int numParticipantes,
 			Tipo_Reserva tipo) {
+		
+		if (usuario == null || instalacion == null) {
+		    return false;
+		}
 
 		if (!instalacion.verificarDisponibilidad(fecha, horaInicio)) {
 			return false;
@@ -129,8 +153,8 @@ public class CentroDeportivo {
 	public boolean cancelarReserva(int idReserva) {
 		for (Reserva r : reservas) {
 			if (r.getIdReserva() == idReserva) {
+				if (r.getEstado() == Estado_Reserva.CANCELADA) return false;
 				r.setEstado(Estado_Reserva.CANCELADA);
-				return true;
 			}
 		}
 		return false;
@@ -141,6 +165,11 @@ public class CentroDeportivo {
 	public boolean modificarReserva(int idReserva, String fecha, String tramohoras, Instalacion nuevaInstalacion) {
 		for (Reserva r : reservas) {
 			if (r.getIdReserva() == idReserva) {
+				
+				if (r.getEstado() != Estado_Reserva.ACTIVA) {
+				    return false;
+				}
+
 				if (nuevaInstalacion.verificarDisponibilidad(fecha, tramohoras)) {
 					r.setFecha(fecha);
 					r.setHoraInicio(tramohoras);
