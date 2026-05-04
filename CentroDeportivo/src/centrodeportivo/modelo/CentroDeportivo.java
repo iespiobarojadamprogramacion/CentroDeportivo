@@ -6,8 +6,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class CentroDeportivo {
-	
-	//PRUEBA
 
 	// Variable para que todo el programa comparta un único centro deportivo 
 
@@ -95,6 +93,7 @@ public class CentroDeportivo {
 
 
 	// Elimina un usuario si el nombre y contraseña coinciden
+	
 	public boolean eliminarUsuario(String nombre, String contrasena) {
 
 	    for (Usuario u : usuarios) {
@@ -156,10 +155,12 @@ public class CentroDeportivo {
 		for (Reserva r : reservas) {
 			if (r.getIdReserva() == idReserva) {
 				if (r.getEstado() == Estado_Reserva.CANCELADA) return false;
+				
 				r.setEstado(Estado_Reserva.CANCELADA);
+				return true; 
 			}
 		}
-		return false;
+		return false; 
 	}
 
 	// Modifica los datos de una reserva si hay disponibilidad
@@ -250,4 +251,9 @@ public class CentroDeportivo {
 		Arrays.sort(copia, Comparator.comparingInt(Instalacion::getIdInstalacion));
 		return copia;
 	}
+	
+	// Método necesario para que la API pueda buscar usuarios
+		public ArrayList<Usuario> getUsuarios() {
+			return usuarios;
+		}
 }

@@ -1,115 +1,132 @@
 package centrodeportivo;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.CardLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import centrodeportivo.modelo.*;
-import vistas.*;
 
-public class Ventana extends JFrame {
+import centrodeportivo.vistas.CancelarReservaVista;
+import centrodeportivo.vistas.ConsultaInstalacionesVista;
+import centrodeportivo.vistas.ConsultaOcupacionVista;
+import centrodeportivo.vistas.CrearReservaVista;
+import centrodeportivo.vistas.RegistroUsuarioVista;
 
-	public static Usuario usuarioActual;
+// Añadimos ActionListener para que la ventana sepa cuándo le hacemos clic a algo
 
+public class Ventana extends JFrame implements ActionListener {
+
+	// Preparamos las variables para las opciones del menú desplegable
 	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Ventana frame = new Ventana();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
-	private static final long serialVersionUID = 1L;
-	
-	private JPanel contentPane;
-	private CardLayout cardLayout;
-	private JPanel panelContenedor;
+	private JMenuItem registroJMenuItem;
+	private JMenuItem crearReservaJMenuItem;
+	private JMenuItem cancelarReservaJMenuItem;
+	private JMenuItem instalacionesJMenuItem;
+	private JMenuItem ocupacionJMenuItem;
 
 	public Ventana() {
-		setTitle("Centro Deportivo");
+		
+		// Le ponemos el título a la ventana principal
+		
+		super("Gestión Centro Deportivo");
+
+		// Le damos el tamaño y le decimos dónde tiene que aparecer al abrirse
+		
+		setBounds(100, 100, 600, 500);
+
+		// Esto es importante para que el programa se cierre del todo al darle a la 'X'
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 700, 500);
 
-		contentPane = new JPanel();
-		contentPane.setLayout(new BorderLayout());
-		setContentPane(contentPane);
-
-		// CardLayout
-		cardLayout = new CardLayout();
-		panelContenedor = new JPanel(cardLayout);
-		contentPane.add(panelContenedor, BorderLayout.CENTER);
-
-		// Añadir paneles
-		panelContenedor.add(new PanelInicio(), "inicio");
+		// Quitamos los diseños automáticos para poder poner las cosas exactamente donde queremos
 		
-		panelContenedor.add(new PanelRegistro(), "registro");
-		panelContenedor.add(new PanelEliminarUsuario(), "eliminar");
-		panelContenedor.add(new PanelInstalaciones(), "instalaciones");
-		panelContenedor.add(new PanelTramosLibres(), "tramos");
-		panelContenedor.add(new PanelOcupacion(), "ocupacion");
-		panelContenedor.add(new PanelCrearReserva(), "crear");
-		panelContenedor.add(new PanelModificarReserva(), "modificar");
-		panelContenedor.add(new PanelCancelarReserva(), "cancelar");
-		panelContenedor.add(new PanelHistorial(), "historial");
-		
-		
+		setLayout(null);
 
+		// Creamos la barra gris de arriba del todo
 		
-		crearMenu();
-	}
-
-	private void crearMenu() {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 
-		JMenu menu = new JMenu("Menú");
-		menuBar.add(menu);
-
-		JMenuItem itemInicio = new JMenuItem("Inicio");
+		// Le ponemos una pestaña que se llame "Gestión"
 		
-		JMenuItem itemRegistro = new JMenuItem("Registrar Usuario");
-		JMenuItem itemEliminar = new JMenuItem("Eliminar Usuario");
-		JMenuItem itemInst = new JMenuItem("Ver Instalaciones");
-		JMenuItem itemTramos = new JMenuItem("Tramos Libres");
-		JMenuItem itemOcupacion = new JMenuItem("Ocupación");
-		JMenuItem itemCrear = new JMenuItem("Crear Reserva");
-		JMenuItem itemModificar = new JMenuItem("Modificar Reserva");
-		JMenuItem itemCancelar = new JMenuItem("Cancelar Reserva");
-		JMenuItem itemHistorial = new JMenuItem("Historial");
+		JMenu gestionJMenu = new JMenu("Gestión");
+		menuBar.add(gestionJMenu);
 
-		menu.add(itemInicio);
+		// Y ahora empezaremos a rellenar el menú con las 5 opciones
+
+		// Opción 1: Creamos el botón, lo metemos en el menú y le decimos que esté atento al clic (this)
 		
-		menu.add(itemRegistro);
-		menu.add(itemEliminar);
-		menu.add(itemInst);
-		menu.add(itemTramos);
-		menu.add(itemOcupacion);
-		menu.add(itemCrear);
-		menu.add(itemModificar);
-		menu.add(itemCancelar);
-		menu.add(itemHistorial);
+		registroJMenuItem = new JMenuItem("Registrar Usuario");
+		gestionJMenu.add(registroJMenuItem);
+		registroJMenuItem.addActionListener(this);
+
+		// Opción 2
 		
+		crearReservaJMenuItem = new JMenuItem("Crear Reserva");
+		gestionJMenu.add(crearReservaJMenuItem);
+		crearReservaJMenuItem.addActionListener(this);
 
-		// Eventos
-		itemRegistro.addActionListener(e -> cardLayout.show(panelContenedor, "registro"));
-		itemEliminar.addActionListener(e -> cardLayout.show(panelContenedor, "eliminar"));
-		itemInst.addActionListener(e -> cardLayout.show(panelContenedor, "instalaciones"));
-		itemTramos.addActionListener(e -> cardLayout.show(panelContenedor, "tramos"));
-		itemOcupacion.addActionListener(e -> cardLayout.show(panelContenedor, "ocupacion"));
-		itemCrear.addActionListener(e -> cardLayout.show(panelContenedor, "crear"));
-		itemModificar.addActionListener(e -> cardLayout.show(panelContenedor, "modificar"));
-		itemCancelar.addActionListener(e -> cardLayout.show(panelContenedor, "cancelar"));
-		itemHistorial.addActionListener(e -> cardLayout.show(panelContenedor, "historial"));
+		// Opción 3
+		
+		cancelarReservaJMenuItem = new JMenuItem("Cancelar Reserva");
+		gestionJMenu.add(cancelarReservaJMenuItem);
+		cancelarReservaJMenuItem.addActionListener(this);
 
+		// Opción 4
+		
+		instalacionesJMenuItem = new JMenuItem("Consultar Instalaciones");
+		gestionJMenu.add(instalacionesJMenuItem);
+		instalacionesJMenuItem.addActionListener(this);
+
+		// Opción 5
+		
+		ocupacionJMenuItem = new JMenuItem("Consultar Ocupación");
+		gestionJMenu.add(ocupacionJMenuItem);
+		ocupacionJMenuItem.addActionListener(this);
+
+		// Hacemos que la ventana sea visible al arrancar
+		
+		setVisible(true);
+	}
+
+	// Este método saltara automáticamente cuando el usuario toque alguna opción del menú
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		// Comprobamos qué botón exacto ha tocado el usuario para cargar su pantalla
+
+		if (e.getSource() == registroJMenuItem) {
+			System.out.println("Cargando vista Registro...");
+			RegistroUsuarioVista vista = new RegistroUsuarioVista();
+			setContentPane(vista);			
+		}
+		else if (e.getSource() == crearReservaJMenuItem) {
+			System.out.println("Cargando vista Crear Reserva...");
+			CrearReservaVista vista = new CrearReservaVista();
+			setContentPane(vista);
+		}
+		else if (e.getSource() == cancelarReservaJMenuItem) {
+			System.out.println("Cargando vista Cancelar Reserva...");
+			CancelarReservaVista vista = new CancelarReservaVista();
+			setContentPane(vista);
+		}
+		else if (e.getSource() == instalacionesJMenuItem) {
+			System.out.println("Cargando vista Instalaciones...");	
+			ConsultaInstalacionesVista vista = new ConsultaInstalacionesVista();
+			setContentPane(vista);
+		}
+		else if (e.getSource() == ocupacionJMenuItem) {
+			System.out.println("Cargando vista Ocupación...");	
+			ConsultaOcupacionVista vista = new ConsultaOcupacionVista();
+			setContentPane(vista);
+		}
+
+		// Refrescamos la ventana por dentro para borrar lo anterior y mostrar lo nuevo
+		
+		revalidate();
+		repaint();
+		
 	}
 }
