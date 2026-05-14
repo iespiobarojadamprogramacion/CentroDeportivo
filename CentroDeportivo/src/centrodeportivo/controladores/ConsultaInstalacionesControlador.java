@@ -14,16 +14,18 @@ public class ConsultaInstalacionesControlador implements ActionListener {
 		this.vista = vista;
 	}
 
-	// Esto saltara cuando el usuario de clic en "Cargar Instalaciones"
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		// Recogera todos los datos de las instalaciones a través de nuestra API
+		// Ponemos este mensaje en la consola solo para comprobar por debajo que el botón funciona bien
+		
+		System.out.println("Cargando lista de instalaciones...");
+
+		// Llamamos a la API para que nos dé los datos y poder rellenar la tabla
 		
 		String[][] resultado = api.consultarInstalaciones();
 
-		// Y se los pasamos a la ventana para que los dibuje en la tabla
+		// Y por último, le pasamos esta información a la ventana para que la muestre en la tabla
 		
 		vista.setDatosTabla(resultado);
 	}

@@ -23,9 +23,7 @@ public class RegistroUsuarioVista extends JPanel {
 
 	public RegistroUsuarioVista() {
 	
-		setLayout(null);
-
-		// Conectamos esta vista con su controlador 
+		setLayout(null); 
 		
 		controlador = new RegistroUsuarioControlador(this);
 
@@ -36,7 +34,7 @@ public class RegistroUsuarioVista extends JPanel {
 		lblTitulo.setBounds(150, 20, 300, 20);
 		add(lblTitulo);
 
-		// Etiqueta y caja de texto para el Nombre
+		// Etiqueta y caja de texto para el nombre
 		
 		JLabel lblNombre = new JLabel("Nombre Completo:");
 		lblNombre.setBounds(80, 80, 150, 20);
@@ -46,7 +44,7 @@ public class RegistroUsuarioVista extends JPanel {
 		txtNombre.setBounds(220, 80, 180, 20);
 		add(txtNombre);
 
-		// Etiqueta y caja de texto para el Teléfono
+		// Etiqueta y caja de texto para el teléfono
 		
 		JLabel lblTelefono = new JLabel("Teléfono:");
 		lblTelefono.setBounds(140, 120, 80, 20);
@@ -56,7 +54,7 @@ public class RegistroUsuarioVista extends JPanel {
 		txtTelefono.setBounds(220, 120, 180, 20);
 		add(txtTelefono);
 
-		// Etiqueta y caja de texto para la Contraseña
+		// Etiqueta y caja de texto para la contraseña
 		
 		JLabel lblContrasena = new JLabel("Contraseña:");
 		lblContrasena.setBounds(125, 160, 100, 20);
@@ -89,7 +87,7 @@ public class RegistroUsuarioVista extends JPanel {
 		return txtContrasena.getText();
 	}
 
-	// Y estos otros métodos seran para mostrar ventanitas de aviso
+	// Y estos otros métodos serán para mostrar ventanitas de aviso
 
 	public void mostrarError(String mensaje) {
 		JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
