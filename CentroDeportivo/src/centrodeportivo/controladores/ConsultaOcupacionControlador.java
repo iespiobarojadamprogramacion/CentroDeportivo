@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import centrodeportivo.modelo.APICentroDeportivo;
 import centrodeportivo.vistas.ConsultaOcupacionVista;
+import utilidades.Util; 
+import utilidades.FechaIncorrectaException; 
 
 public class ConsultaOcupacionControlador implements ActionListener {
 
@@ -14,28 +16,36 @@ public class ConsultaOcupacionControlador implements ActionListener {
 		this.vista = vista;
 	}
 
-	// Cuando pulsen el botón de "Consultar"
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		// Se cogerá la fecha de la cajita
+		// Lo primero que hacemos sera sacar el texto de la fecha que se escribió en la cajita
 		
 		String fecha = vista.getFecha();
 
-		// Comprobaremos que no esté vacía
+		// Comprobamos que no le haya dado al botón dejando el hueco en blanco
 		
-		if (fecha.isBlank()) {
+		if (fecha == null || fecha.isBlank()) {
 			vista.mostrarAviso("Por favor, escribe una fecha antes de consultar.");
 			return;
 		}
 
-		// Le pediremos al centro que nos calcule la ocupación de ese día
+		// Y atraparemos aquí cualquier error en la fecha
 		
-		String[] datos = api.consultarOcupacion(fecha);
+		try {
+			// Validamos que de verdad sea una fecha y no letras sueltas
+			Util.validarFecha(fecha);
 
-		// Y mandaremos esos datos a la pantalla para que se vean
-		
-		vista.mostrarResultados(datos);
+			// Si la fecha está perfecta, le pedimos al centro que nos calcule la ocupación
+			String[] datos = api.consultarOcupacion(fecha);
+
+			// Y mandamos esos datos a la pantalla para que el usuario los vea
+			vista.mostrarResultados(datos);
+
+		} catch (FechaIncorrectaException ex) {
+			// Si escribió letras o el formato está mal, el código saltara aquí directamente
+			vista.mostrarAviso("Error: La fecha debe tener formato numérico (DD/MM/AAAA).");
+		}
 	}
 }
